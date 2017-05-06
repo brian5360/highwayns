@@ -1,22 +1,12 @@
 ﻿<?php
- /*
- * 74cms 举报
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../include/common.inc.php');
 $act = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'app';
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['utype'])) &&  $_COOKIE['QS']['username'] && $_COOKIE['QS']['password'] && $_COOKIE['QS']['uid'])
 {
-	require_once(QISHI_ROOT_PATH.'include/fun_user.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/fun_user.php');
 	if(check_cookie($_COOKIE['QS']['uid'],$_COOKIE['QS']['username'],$_COOKIE['QS']['password']))
 	{
 	update_user_info($_COOKIE['QS']['uid'],false,false);
@@ -25,10 +15,10 @@ if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['
 	else
 	{
 	unset($_SESSION['uid'],$_SESSION['username'],$_SESSION['utype'],$_SESSION['uqqid'],$_SESSION['activate_username'],$_SESSION['activate_email'],$_SESSION["openid"]);
-	setcookie("QS[uid]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[username]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[password]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie("QS[utype]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
+	setcookie("QS[uid]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[username]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[password]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie("QS[utype]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
 	}
 }
 if ($_SESSION['uid']=='' || $_SESSION['username']=='')
@@ -49,7 +39,7 @@ if ($_SESSION['utype']!='2')
 		    </tr>
 		</table>');
 }
-require_once(QISHI_ROOT_PATH.'include/fun_personal.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_personal.php');
 $user=get_user_info($_SESSION['uid']);
 if ($user['status']=="2") 
 {
@@ -64,7 +54,7 @@ if ($user['status']=="2")
 }
 if ($act=="report")
 {		
-		$id=isset($_GET['jobs_id'])?$_GET['jobs_id']:exit("id 丢失");
+		$id=isset($_GET['jobs_id'])?$_GET['jobs_id']:exit("id 失った");
 		$jobs=app_get_jobs($id);
 		if (empty($jobs))
 		{
@@ -98,7 +88,7 @@ $("#ajax_report").click(function() {
 	var content=$("#content").val();
 	if (content=="")
 	{
-	alert("请输入描述");
+	alert("説明を入力してください");
 	}
 	else
 	{
@@ -120,7 +110,7 @@ $("#ajax_report").click(function() {
 				$("#report").hide();
 				$("#waiting").hide();
 				$("#app_ok").hide();
-				$("#error_msg").html("举报失败！"+data);
+				$("#error_msg").html("報告失敗！"+data);
 				$("#error").show();
 			}
 	 	 });
@@ -154,7 +144,7 @@ $("#ajax_report").click(function() {
 		</div>
 	</div>
 	<div class="center-btn-box">
-		<input type="button" value="举报" class="btn-65-30blue btn-big-font " id="ajax_report"/><input type="button" value="取消" class="btn-65-30grey btn-big-font DialogClose" />
+		<input type="button" value="報告" class="btn-65-30blue btn-big-font " id="ajax_report"/><input type="button" value="取消" class="btn-65-30grey btn-big-font DialogClose" />
 	</div>
 	<p class="jubao-tip" style="padding-left: 10px;">温馨提示：找份工作不容易，请您如实举报哦！</p>
 </div>
@@ -187,19 +177,19 @@ $("#ajax_report").click(function() {
 }
 elseif ($act=="app_save")
 {
-	$setsqlarr['content']=trim($_POST['content'])?trim($_POST['content']):exit("出错了");
-	$setsqlarr['jobs_id']=$_POST['jobs_id']?intval($_POST['jobs_id']):exit("出错了");
+	$setsqlarr['content']=trim($_POST['content'])?trim($_POST['content']):exit("エラー発生");
+	$setsqlarr['jobs_id']=$_POST['jobs_id']?intval($_POST['jobs_id']):exit("エラー発生");
 	$setsqlarr['uid']=intval($_SESSION['uid']);
 	$setsqlarr['addtime']=time();
 	$setsqlarr['report_type']=intval($_POST['report_type']); // 投诉类型
-	if (strcasecmp(QISHI_DBCHARSET,"utf8")!=0)
+	if (strcasecmp(HIGHWAY_DBCHARSET,"utf8")!=0)
 	{
 	$setsqlarr['content']=utf8_to_gbk($setsqlarr['content']);
 	}
 	$jobsarr=app_get_jobs($setsqlarr['jobs_id']);
 	if (empty($jobsarr))
 	{
-	exit("职位丢失");
+	exit("職位失った");
 	}
 	else
 	{

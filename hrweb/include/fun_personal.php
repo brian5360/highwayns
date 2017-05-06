@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 个人会员函数
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-if(!defined('IN_QISHI'))
+if(!defined('IN_HIGHWAY'))
 {
  die('Access Denied!');
 }
@@ -19,7 +9,7 @@ function get_resume_list($wheresql,$titlele=12,$countinterview=false,$countdown=
 		$result = $db->query("{$wheresql} LIMIT 30");
 		while($row = $db->fetch_array($result))
 		{
-			$row['resume_url']=url_rewrite('QS_resumeshow',array('id'=>$row['id']));
+			$row['resume_url']=url_rewrite('HW_resumeshow',array('id'=>$row['id']));
 			$row['title']=cut_str($row['title'],$titlele,0,"...");
 			$row['number']="N".str_pad($row['id'],7,"0",STR_PAD_LEFT);
 			$row['lastname']=cut_str($row['fullname'],1,0,"**");
@@ -61,7 +51,7 @@ function get_auditresume_list($uid,$titlele=12)
 		$result = $db->query("SELECT * FROM ".table('resume')." WHERE uid='{$uid}'".$wheresql);
 		while($row = $db->fetch_array($result))
 		{
-			$row['resume_url']=url_rewrite('QS_resumeshow',array('id'=>$row['id']));
+			$row['resume_url']=url_rewrite('HW_resumeshow',array('id'=>$row['id']));
 			$row['title_'] = $row['title'];
 			$row['title']=cut_str($row['title'],$titlele,0,"...");
 			$row['number']="N".str_pad($row['id'],7,"0",STR_PAD_LEFT);
@@ -87,9 +77,9 @@ function get_resume_basic($uid,$id)
 		$info['number']="N".str_pad($info['id'],7,"0",STR_PAD_LEFT);
 		//$info['lastname']=cut_str($info['fullname'],1,0,"**");
 		if($info['sex']==1){
-			$info['lastname']=cut_str($info['fullname'],1,0,"先生");
+			$info['lastname']=cut_str($info['fullname'],1,0,"男");
 		}elseif($info['sex'] == 2){
-			$info['lastname']=cut_str($info['fullname'],1,0,"女士");
+			$info['lastname']=cut_str($info['fullname'],1,0,"女");
 		}else{
 			$info['lastname']=cut_str($info['fullname'],1,0,"**");
 		}	
@@ -298,7 +288,7 @@ function refresh_resume($pid,$uid)
 	if (!$db->query("update  ".table('resume')."  SET refreshtime='{$time}'  WHERE id='{$pid}' AND uid='{$uid}'")) return false;
 	if (!$db->query("update  ".table('resume_search_rtime')."  SET refreshtime='{$time}'  WHERE id='{$pid}' AND uid='{$uid}'")) return false;
 	if (!$db->query("update  ".table('resume_search_key')."  SET refreshtime='{$time}'  WHERE id='{$pid}' AND uid='{$uid}'")) return false;
-	write_memberslog($_SESSION['uid'],2,1102,$_SESSION['username'],"刷新了id为{$pid}的简历");
+	write_memberslog($_SESSION['uid'],2,1102,$_SESSION['username'],"id：{$pid}の履歴書を変更済み");
 	write_refresh_log($_SESSION['uid'],2001);		
 	return true;
 }
@@ -319,7 +309,7 @@ function del_resume($uid,$pid)
 	if (!$db->query("Delete from ".table('resume_language')." WHERE pid='{$pid}' AND uid='{$uid}' ")) return false;
 	if (!$db->query("Delete from ".table('resume_search_rtime')." WHERE id='{$pid}' AND uid='{$uid}' ")) return false;
 	if (!$db->query("Delete from ".table('resume_search_key')." WHERE id='{$pid}' AND uid='{$uid}' ")) return false;
-	write_memberslog($_SESSION['uid'],2,1103,$_SESSION['username'],"删除简历({$pid})");
+	write_memberslog($_SESSION['uid'],2,1103,$_SESSION['username'],"履歴書({$pid})削除");
 	return true;
 }
 //修改简历照片显示设置
@@ -366,7 +356,7 @@ function check_resume($uid,$pid)
 	$setsqlarr['photo']=0;
 	}
 	$setsqlarr['complete_percent']=$percent;
-	require_once(QISHI_ROOT_PATH.'include/splitword.class.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/splitword.class.php');
 	$sp = new SPWord();
 	$setsqlarr['key']=addslashes($resume_basic['intention_jobs']).addslashes($resume_basic['recentjobs']).addslashes($resume_basic['specialty']);		
 	$setsqlarr['key']=addslashes($resume_basic['fullname']).$sp->extracttag($setsqlarr['key']);
@@ -435,7 +425,7 @@ function get_com_downresume($offset,$perpage,$get_sql='')
 	$result = $db->query($sql);
 	while($row = $db->fetch_array($result))
 	{
-	$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['id']));
+	$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['id']));
 	$row_arr[] = $row;
 	}
 	return $row_arr;
@@ -470,9 +460,9 @@ function get_invitation($offset,$perpage,$get_sql= '')
 		}
 	$row['belong_name'] = $row['companyname'];
 	$row['jobs_name_'] = cut_str($row['jobs_name'],5,0,"...");
-	$row['belong_url']=url_rewrite('QS_companyshow',array('id'=>$row['company_id']));
-	$row['jobs_url']=url_rewrite('QS_jobsshow',array('id'=>$row['jobs_id']));
-	$row['notes'] = "对方于 ".date('Y-m-d',$row['interview_addtime'])." 对您发起面试邀请<br />面试时间为：".$row['interview_time']."<br /><br />具体详情：<br />".($row['notes']==""?"暂无":$row['notes']);
+	$row['belong_url']=url_rewrite('HW_companyshow',array('id'=>$row['company_id']));
+	$row['jobs_url']=url_rewrite('HW_jobsshow',array('id'=>$row['jobs_id']));
+	$row['notes'] = "对方于 ".date('Y-m-d',$row['interview_addtime'])." 面接誘いがあります<br />面接時間为：".$row['interview_time']."<br /><br />詳細情報：<br />".($row['notes']==""?"なし":$row['notes']);
 	$row_arr[] = $row;
 	}
 	return $row_arr;
@@ -487,7 +477,7 @@ function del_interview($id,$uid)
 	$sqlin=implode(",",$id);
 	if (!preg_match("/^(\d{1,10},)*(\d{1,10})$/",$sqlin)) return false;
 	$sql="Delete from ".table('company_interview')." WHERE did IN (".$sqlin.") ".$uidsql."";
-	write_memberslog($_SESSION['uid'],2,1502,$_SESSION['username'],"删除了面试邀请($sqlin)");
+	write_memberslog($_SESSION['uid'],2,1502,$_SESSION['username'],"面接誘いを削除しました($sqlin)");
 	$db->query($sql);
 	$return=$return+$db->affected_rows();
 	return $return;
@@ -504,7 +494,7 @@ function set_invitation($id,$uid,$setlook)
 	{
 		$members=$db->getone("select m.username from ".table('company_interview')." AS i JOIN ".table('members')." AS m ON i.company_uid=m.uid WHERE i.did='{$aid}' LIMIT 1");
 		$members=array_map("addslashes", $members);
-		write_memberslog($_SESSION['uid'],2,1108,$_SESSION['username'],"查看了 {$members['username']} 的邀请面试");
+		write_memberslog($_SESSION['uid'],2,1108,$_SESSION['username']," {$members['username']} の面接誘いを見ました");
 	}	
 	return $db->updatetable(table('company_interview'),$setsqlarr,$wheresql);
 }
@@ -565,8 +555,8 @@ function get_favorites($offset,$perpage,$get_sql= '')
 				$row['click']=$jobs['click'];
 			}
 		}
-	$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['company_id']));
-	$row['jobs_url']=url_rewrite('QS_jobsshow',array('id'=>$row['jobs_id']));
+	$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['company_id']));
+	$row['jobs_url']=url_rewrite('HW_jobsshow',array('id'=>$row['jobs_id']));
 	$row_arr[] = $row;
 	}
 	return $row_arr;
@@ -580,7 +570,7 @@ function del_favorites($id,$uid)
 	$sqlin=implode(",",$id);
 	if (!preg_match("/^(\d{1,10},)*(\d{1,10})$/",$sqlin)) return false;
 	$sql="Delete from ".table('personal_favorites')." WHERE did IN (".$sqlin.") ".$uidsql."";
-	write_memberslog($_SESSION['uid'],2,1202,$_SESSION['username'],"删除了职位收藏($sqlin)");
+	write_memberslog($_SESSION['uid'],2,1202,$_SESSION['username'],"職位お気に入り削除($sqlin)");
 	$db->query($sql);
 	$return=$return+$db->affected_rows();
 	return $return;
@@ -635,22 +625,22 @@ function get_apply_jobs($offset,$perpage,$joinsql,$wheresql)
 		}
 		else
 		{
-			$row['resume_name'] = "该简历已经删除";
+			$row['resume_name'] = "該当履歴書を削除しました";
 		}
-		$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['company_id']));
+		$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['company_id']));
 		$row['belong_name'] = $row['company_name'];
 		$row['belong_url'] = $row['company_url'];
-		$row['jobs_url']=url_rewrite('QS_jobsshow',array('id'=>$row['jobs_id']));
+		$row['jobs_url']=url_rewrite('HW_jobsshow',array('id'=>$row['jobs_id']));
 		//答复状态
 		if($row['personal_look']=='1')
 		{
-			$row['reply_status'] = "企业未查看";
+			$row['reply_status'] = "未閲覧企業";
 		}
 		else
 		{
 			if($row['is_reply']=='0')
 			{
-				$row['reply_status'] = "待反馈";
+				$row['reply_status'] = "フィードバック";
 			}
 			elseif($row['is_reply']=='1')
 			{
@@ -662,11 +652,11 @@ function get_apply_jobs($offset,$perpage,$joinsql,$wheresql)
 			}
 			elseif($row['is_reply']=='3')
 			{
-				$row['reply_status'] = "待定";
+				$row['reply_status'] = "確認中";
 			}
 			elseif($row['is_reply']=='4')
 			{
-				$row['reply_status'] = "未接通";
+				$row['reply_status'] = "未接続";
 			}
 		}
 		$row_arr[] = $row;
@@ -697,7 +687,7 @@ function del_jobs_apply($del_id,$uid)
 	$sqlin=implode(",",$del_id);
 	if (!preg_match("/^(\d{1,10},)*(\d{1,10})$/",$sqlin)) return false;
 	if (!$db->query("Delete from ".table('personal_jobs_apply')." WHERE did IN (".$sqlin.") ".$uidsql."")) return false;
-	write_memberslog($_SESSION['uid'],2,1302,$_SESSION['username'],"删除了职位申请($sqlin)");
+	write_memberslog($_SESSION['uid'],2,1302,$_SESSION['username'],"職位申し込みを削除しました($sqlin)");
 	$return=$return+$db->affected_rows();
 	return $return;
 }
@@ -763,7 +753,7 @@ function del_feedback($del_id,$uid)
 {
 	global $db;
 	if (!$db->query("Delete from ".table('feedback')." WHERE id='".intval($del_id)."' AND uid='".intval($uid)."'  ")) return false;
-	write_memberslog($_SESSION['uid'],2,7002,$_SESSION['username'],"删除反馈信息($del_id)");
+	write_memberslog($_SESSION['uid'],2,7002,$_SESSION['username'],"フィードバック情報削除($del_id)");
 	return true;
 }
 function get_interest_jobs_id($uid)
@@ -852,9 +842,9 @@ function get_pms($offset,$perpage,$get_sql= '')
 }
 //3.5
 function get_pms_no_num(){	//获取PMS 未读取的数量
-	global $db,$QS_cookiepath,$QS_cookiedomain;
+	global $db,$HW_cookiepath,$HW_cookiedomain;
 	$pmscount=$db->get_total("SELECT COUNT(*) AS num FROM ".table('pms')." WHERE (msgfromuid='{$_SESSION['uid']}' OR msgtouid='{$_SESSION['uid']}') AND `new`='1' AND `replyuid`<>'{$_SESSION['uid']}'");
-	setcookie('QS[pmscount]',$pmscount, false,$QS_cookiepath,$QS_cookiedomain);
+	setcookie('QS[pmscount]',$pmscount, false,$HW_cookiepath,$HW_cookiedomain);
 	return $pmscount;
 }
 //3.5

@@ -1,20 +1,10 @@
 ﻿<?php
- /*
- * 74cms 生成HTML
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../data/config.php');
 require_once(dirname(__FILE__).'/include/admin_common.inc.php');
 $act = !empty($_REQUEST['act']) ? trim($_REQUEST['act']) : 'set';
 $smarty->assign('act',$act);
-$smarty->assign('pageheader',"百度链接提交");
+$smarty->assign('pageheader',"Baiduリンク提出");
 if($act == 'set')
 {
 $smarty->assign('data',get_cache('baidu_submiturl'));
@@ -32,10 +22,10 @@ elseif($act == 'setsave')
 	$_POST['addnotice']=intval($_POST['addnotice']);
 	foreach($_POST as $k => $v)
 	{
-	!$db->query("UPDATE ".table('baidu_submiturl')." SET value='{$v}' WHERE name='{$k}'")?adminmsg('保存失败', 1):"";
+	!$db->query("UPDATE ".table('baidu_submiturl')." SET value='{$v}' WHERE name='{$k}'")?adminmsg('保存失敗', 1):"";
 	}
 	refresh_cache('baidu_submiturl');
-	write_log("修改百度链接提交配置", $_SESSION['admin_name'],3);
+	write_log("Baiduリンク提出配置変更", $_SESSION['admin_name'],3);
 	adminmsg("保存成功！",2);
 }
 ?>

@@ -2,7 +2,7 @@
 /*********************************************
 *骑士广告
 * *******************************************/
-function tpl_function_qishi_ad($params, &$smarty)
+function tpl_function_highway_ad($params, &$smarty)
 {
 global $db,$_CFG;
 $arrset=explode(',',$params['set']);
@@ -11,25 +11,25 @@ foreach($arrset as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "显示数目":
+	case "表示数目":
 		$aset['row'] = $a[1];
 		break;
-	case "开始位置":
+	case "開始位置":
 		$aset['start'] = $a[1];
 		break;
-	case "文字长度":
+	case "文字長さ":
 		$aset['titlelen'] = $a[1];
 		break;
-	case "填补字符":
+	case "記号を入力してください":
 		$aset['dot'] = $a[1];
 		break;
-	case "调用名称":
+	case "Call名称":
 		$aset['alias'] = $a[1];
 		break;
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
-	case "排序":
+	case "ソート":
 		$aset['displayorder'] = $a[1];
 		break;
 	}
@@ -107,7 +107,7 @@ while($row = $db->fetch_array($result))
 			$list["briefly"]=htmlspecialchars_decode(strip_tags($companyinfo['contents']),ENT_QUOTES);
 			unset($list["companyname"]);
 			$list["companyname"]=strip_tags($companyinfo['companyname']);
-			$list["company_url"]=url_rewrite("QS_companyshow",array('id'=>$companyinfo['id']));
+			$list["company_url"]=url_rewrite("HW_companyshow",array('id'=>$companyinfo['id']));
 			if($list['img_url']=="")
 			{
 				$list['img_url']=$list["company_url"];
@@ -115,7 +115,7 @@ while($row = $db->fetch_array($result))
 			$jobsarray = $db->getall("select * from ".table('jobs')." where uid={$row['img_uid']}");
 			unset($list['jobs']);
 			foreach ($jobsarray as $key=>$val) {
-				$val["jobs_url"]=url_rewrite("QS_jobsshow",array('id'=>$val['id']));
+				$val["jobs_url"]=url_rewrite("HW_jobsshow",array('id'=>$val['id']));
 				$list['jobs'][$key]=$val;
 			}
 		}
@@ -160,16 +160,16 @@ while($row = $db->fetch_array($result))
 }
 if(!empty($arr) && $arr[0]['type_id']=="5")
 {
-	$arr=qs_ad_floating($arr);
+	$arr=hw_ad_floating($arr);
 }
 elseif (!empty($arr) && $arr[0]['type_id']=="6")
 {
-	$arr=qs_ad_video($arr);
+	$arr=hw_ad_video($arr);
 }
 $smarty->assign($aset['listname'],$arr);
 unset($alist,$row,$aset,$list);
 }
-function qs_ad_floating($arr)
+function hw_ad_floating($arr)
 {
 	global $_CFG;
 	if (empty($arr)) return array('float_code'=>'');
@@ -181,12 +181,12 @@ function qs_ad_floating($arr)
 	$floatingstr=$str['floating_left']!==""?" LEFT: ".$str['floating_left']."px;":" RIGHT: ".$str['floating_right']."px;";
 		if ($str['floating_type']=="1")
 		{
-		$html.="suspendcode=\"<DIV id=\'floating".$str['id']."\' style='Z-INDEX: 10".$str['id'].";".$floatingstr." POSITION: absolute; TOP: ".$str['floating_top']."px; width: ".$str['floating_width']."; height: ".($str['floating_height']+14)."px;'><img src='".$_CFG['site_template']."images/45close.gif' onClick=javascript:close_divs(\'floating".$str['id']."\') width='100' height='14' border='0' vspace='3' alt='关闭广告'><br/><a href='".$str['floating_url']."' target='_blank'><img src='".$str['floating_path']."' width='".$str['floating_width']."' height='".$str['floating_height']."' border='0'></a></DIV>\";\n"; 
+		$html.="suspendcode=\"<DIV id=\'floating".$str['id']."\' style='Z-INDEX: 10".$str['id'].";".$floatingstr." POSITION: absolute; TOP: ".$str['floating_top']."px; width: ".$str['floating_width']."; height: ".($str['floating_height']+14)."px;'><img src='".$_CFG['site_template']."images/45close.gif' onClick=javascript:close_divs(\'floating".$str['id']."\') width='100' height='14' border='0' vspace='3' alt='広告を閉じる'><br/><a href='".$str['floating_url']."' target='_blank'><img src='".$str['floating_path']."' width='".$str['floating_width']."' height='".$str['floating_height']."' border='0'></a></DIV>\";\n"; 
 		$html.="document.write(suspendcode);\n"; 
 		}
 		if ($str['floating_type']=="2")
 		{
-		$html.="suspendcode=\"<DIV id=\'floating".$str['id']."\' style='Z-INDEX: 10".$str['id'].";".$floatingstr." POSITION: absolute; TOP: ".$str['floating_top']."px; width: ".$str['floating_width']."; height: ".($str['floating_height']+14)."px;'><img src='".$_CFG['site_template']."images/45close.gif' onClick=javascript:close_divs(\'floating".$str['id']."\') width='100' height='14' border='0' vspace='3' alt='关闭广告'><br/><object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase=\'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\' width=\'".$str['floating_width']."\' height=\'".$str['floating_height']."\'><param name=\'movie\' value=\'".$str['floating_path']."\' /><param name=\'quality\' value=\'high\' /><embed src=\'".$str['floating_path']."\' quality=\'high\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\' type=\'application/x-shockwave-flash\' width=\'".$str['floating_width']."\' height=\'".$str['floating_height']."\'></embed></object></DIV>\";\n"; 
+		$html.="suspendcode=\"<DIV id=\'floating".$str['id']."\' style='Z-INDEX: 10".$str['id'].";".$floatingstr." POSITION: absolute; TOP: ".$str['floating_top']."px; width: ".$str['floating_width']."; height: ".($str['floating_height']+14)."px;'><img src='".$_CFG['site_template']."images/45close.gif' onClick=javascript:close_divs(\'floating".$str['id']."\') width='100' height='14' border='0' vspace='3' alt='広告を閉じる'><br/><object classid=\'clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\' codebase=\'http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\' width=\'".$str['floating_width']."\' height=\'".$str['floating_height']."\'><param name=\'movie\' value=\'".$str['floating_path']."\' /><param name=\'quality\' value=\'high\' /><embed src=\'".$str['floating_path']."\' quality=\'high\' pluginspage=\'http://www.macromedia.com/go/getflashplayer\' type=\'application/x-shockwave-flash\' width=\'".$str['floating_width']."\' height=\'".$str['floating_height']."\'></embed></object></DIV>\";\n"; 
 		$html.="document.write(suspendcode);\n"; 
 		}
 	}
@@ -217,7 +217,7 @@ function qs_ad_floating($arr)
 	$html.="</SCRIPT>\n";
 	return array('float_code'=>$html);
 }
-function qs_ad_video($arr)
+function hw_ad_video($arr)
 {
 	global $_CFG;
 	if (empty($arr)) return array('video_code'=>'');

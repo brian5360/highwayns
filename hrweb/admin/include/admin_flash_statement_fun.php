@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms FLASH报表
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-if(!defined('IN_QISHI'))
+if(!defined('IN_HIGHWAY'))
 {
 die('Access Denied!');
 }
@@ -50,13 +40,13 @@ function meal_log_pie($pie_type='1',$utype='1')
 		}elseif($pie_type=='2'){
 			$date=date('n',$row['log_addtime']);
 			if($date>=1 && $date<4){
-				$datelist['第一季度']+=$row['log_amount'];
+				$datelist['第一季節']+=$row['log_amount'];
 			}elseif($date>=4 && $date<=6){
-				$datelist['第二季度']+=$row['log_amount'];
+				$datelist['第二季節']+=$row['log_amount'];
 			}elseif($date>6 && $date<=9){
-				$datelist['第三季度']+=$row['log_amount'];
+				$datelist['第三季節']+=$row['log_amount'];
 			}elseif($date>9 && $date<=12){
-				$datelist['第四季度']+=$row['log_amount'];
+				$datelist['第四季節']+=$row['log_amount'];
 			}
 		}
 	}		
@@ -77,13 +67,13 @@ function meal_train_log_pie($pie_type='1',$utype='1')
 		}elseif($pie_type=='2'){
 			$date=date('n',$row['log_addtime']);
 			if($date>=1 && $date<4){
-				$datelist['第一季度']+=$row['log_amount'];
+				$datelist['第一季節']+=$row['log_amount'];
 			}elseif($date>=4 && $date<=6){
-				$datelist['第二季度']+=$row['log_amount'];
+				$datelist['第二季節']+=$row['log_amount'];
 			}elseif($date>6 && $date<=9){
-				$datelist['第三季度']+=$row['log_amount'];
+				$datelist['第三季節']+=$row['log_amount'];
 			}elseif($date>9 && $date<=12){
-				$datelist['第四季度']+=$row['log_amount'];
+				$datelist['第四季節']+=$row['log_amount'];
 			}
 		}
 	}		
@@ -104,13 +94,13 @@ function meal_hunter_log_pie($pie_type='1',$utype='3')
 		}elseif($pie_type=='2'){
 			$date=date('n',$row['log_addtime']);
 			if($date>=1 && $date<4){
-				$datelist['第一季度']+=$row['log_amount'];
+				$datelist['第一季節']+=$row['log_amount'];
 			}elseif($date>=4 && $date<=6){
-				$datelist['第二季度']+=$row['log_amount'];
+				$datelist['第二季節']+=$row['log_amount'];
 			}elseif($date>6 && $date<=9){
-				$datelist['第三季度']+=$row['log_amount'];
+				$datelist['第三季節']+=$row['log_amount'];
 			}elseif($date>9 && $date<=12){
-				$datelist['第四季度']+=$row['log_amount'];
+				$datelist['第四季節']+=$row['log_amount'];
 			}
 		}
 	}		
@@ -122,7 +112,7 @@ function check_xml($xml)
 	$xmlname=ADMIN_ROOT_PATH."statement/{$xml}";
 	if (!is_writable(ADMIN_ROOT_PATH.'statement/'))
 	{
-	exit("请先将后台“statement”目录设置可读写！");
+	exit("“statement”フォルダーを読み書き可能に設定してください！");
 	}
 	if (file_exists($xmlname))
 	{
@@ -157,18 +147,18 @@ function write_xml($xml, $array)
 		$fp = @fopen($xmlname, 'wb+');
 		if (!$fp)
 		{
-			exit('生xml文件失败，请设置后台目录“statement”的读写权限');
+			exit('xmlファイル作成失敗，“statement”フォルダーの権限を設定してください');
 		}
 		if (!@fwrite($fp, trim($content)))
 		{
-			exit('生xml文件失败，请设置后台目录“statement”的读写权限');
+			exit('xmlファイル作成失敗，“statement”フォルダーの権限を設定してください');
 		}
 		@fclose($fp);
 	}
 }
 function write_client($xml,$array)
 {
-	$content = '<chart ShowAboutMenuItem="0"  numberPrefix=" "  exportEnabled="1" exportShowMenuItem="1" exportAtClient="1" exportHandler="fcExporter1" baseFont="宋体"  baseFontSize="14" bgColor="#FFFFFF" shadowAlpha="100" canvasBgColor="#FFFFFF"  >\n';
+	$content = '<chart ShowAboutMenuItem="0"  numberPrefix=" "  exportEnabled="1" exportShowMenuItem="1" exportAtClient="1" exportHandler="fcExporter1" baseFont="明朝"  baseFontSize="14" bgColor="#FFFFFF" shadowAlpha="100" canvasBgColor="#FFFFFF"  >\n';
 	foreach($array as $key => $value)
 	{
 	$content .= "<set name='{$key}' value='{$value}' /> \n";
@@ -180,11 +170,11 @@ function write_client($xml,$array)
 		$fp = @fopen($xmlname, 'wb+');
 		if (!$fp)
 		{
-			exit('生xml文件失败，请设置后台目录“statement”的读写权限');
+			exit('xmlファイル作成失敗，“statement”フォルダーの権限を設定してください');
 		}
 		if (!@fwrite($fp, trim($content)))
 		{
-			exit('生xml文件失败，请设置后台目录“statement”的读写权限');
+			exit('xmlファイル作成失敗，“statement”フォルダーの権限を設定してください');
 		}
 		@fclose($fp);
 	}

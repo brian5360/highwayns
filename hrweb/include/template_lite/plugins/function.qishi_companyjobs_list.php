@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_companyjobs_list($params, &$smarty)
+function tpl_function_highway_companyjobs_list($params, &$smarty)
 {
 global $db,$_CFG;
 $arrset=explode(',',$params['set']);
@@ -8,61 +8,61 @@ foreach($arrset as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
-	case "显示数目":
+	case "表示数目":
 		$aset['row'] = $a[1];
 		break;
-	case "推荐":
+	case "おすすめ":
 		$aset['recommend'] = $a[1];
 		break;
-	case "开始位置":
+	case "開始位置":
 		$aset['start'] = $a[1];
 		break;
-	case "职位名长度":
+	case "職位名長さ":
 		$aset['jobslen'] = $a[1];
 		break;
-	case "显示职位":
+	case "職位表示":
 		$aset['jobsrow'] = $a[1];
 		break;
-	case "企业名长度":
+	case "企業名長さ":
 		$aset['companynamelen'] = $a[1];
 		break;
-	case "地区大类":
+	case "地区大分類":
 		$aset['district'] = $a[1];
 		break;
-	case "地区小类":
+	case "地区小分類":
 		$aset['sdistrict'] = $a[1];
 		break;
-	case "填补字符":
+	case "記号を入力してください":
 		$aset['dot'] = $a[1];
 		break;
-	case "行业":
+	case "業界":
 		$aset['trade'] = $a[1];
 		break;
-	case "日期范围":
+	case "日期範囲":
 		$aset['settr'] = $a[1];
 		break;		
-	case "紧急招聘":
+	case "紧急募集":
 		$aset['emergency'] = $a[1];
 		break;
-	case "排序":
+	case "ソート":
 		$aset['displayorder'] = $a[1];
 		break;
-	case "分页显示":
+	case "ページごと表示":
 		$aset['paged'] = $a[1];
 		break;
-	case "公司页面":
+	case "会社ページ":
 		$aset['companyshow'] = $a[1];
 		break;
-	case "职位页面":
+	case "職位ページ":
 		$aset['jobsshow'] = $a[1];
 		break;
-	case "职位分类":
+	case "職位分類":
 		$aset['jobscategory'] = $a[1];
 		break;
-	case "统计职位":
+	case "職位集計":
 		$aset['countjobs'] = $a[1];
 		break;
 	}
@@ -75,8 +75,8 @@ $aset['jobslen']=isset($aset['jobslen'])?intval($aset['jobslen']):8;
 $aset['jobsrow']=isset($aset['jobsrow'])?intval($aset['jobsrow']):3;
 $aset['companynamelen']=isset($aset['companynamelen'])?intval($aset['companynamelen']):16;
 $aset['dot']=isset($aset['dot'])?$aset['dot']:null;
-$aset['companyshow']=isset($aset['companyshow'])?$aset['companyshow']:'QS_companyshow';
-$aset['jobsshow']=isset($aset['jobsshow'])?$aset['jobsshow']:'QS_jobsshow';
+$aset['companyshow']=isset($aset['companyshow'])?$aset['companyshow']:'HW_companyshow';
+$aset['jobsshow']=isset($aset['jobsshow'])?$aset['jobsshow']:'HW_jobsshow';
 if (isset($aset['displayorder']))
 {
 		$arr=explode('>',$aset['displayorder']);

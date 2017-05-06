@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_help_show($params, &$smarty)
+function tpl_function_highway_help_show($params, &$smarty)
 {
 	global $db;
 	$arr=explode(',',$params['set']);
@@ -11,7 +11,7 @@ function tpl_function_qishi_help_show($params, &$smarty)
 		case "ID":
 			$aset['id'] = $a[1];
 			break;
-		case "列表名":
+		case "一覧名":
 			$aset['listname'] = $a[1];
 			break;
 		}

@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 计划任务 清除缓存
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-if(!defined('IN_QISHI'))
+if(!defined('IN_HIGHWAY'))
 {
 die('Access Denied!');
 }
@@ -50,7 +40,7 @@ die('Access Denied!');
 			$db->query("UPDATE ".table('jobs')." SET highlight='' WHERE id='{$row['cp_jobid']}' LIMIT 1");
 			$db->query("UPDATE ".table('jobs_tmp')." SET highlight='' WHERE id='{$row['cp_jobid']}' LIMIT 1");
 		}
-		write_memberslog($row['cp_uid'],1,3006,$row['username'],"推广到期，自动删除，职位ID:{$row['cp_jobid']}，方案ID：{$row['cp_id']}");
+		write_memberslog($row['cp_uid'],1,3006,$row['username'],"広告期限切れた，自動削除，職位ID:{$row['cp_jobid']}，ケースID：{$row['cp_id']}");
 		$proid[] = $row['cp_id'];		
 	}
 	if (is_array($proid) && !empty($proid))

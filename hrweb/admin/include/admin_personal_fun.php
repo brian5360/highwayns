@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 管理中心 个人用户相关函数
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
- if(!defined('IN_QISHI'))
+ if(!defined('IN_HIGHWAY'))
  {
  	die('Access Denied!');
  }
@@ -41,8 +31,8 @@ function get_jobs($offset,$perpage,$get_sql= '')
 	$row['jobs_name']="<span style=\"color:{$row['highlight']}\">{$row['jobs_name']}</span>";
 	}
 	$row['companyname']=cut_str($row['companyname'],18,0,"...");
-	$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['company_id']));
-	$row['jobs_url']=url_rewrite('QS_jobsshow',array('id'=>$row['id']));
+	$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['company_id']));
+	$row['jobs_url']=url_rewrite('HW_jobsshow',array('id'=>$row['id']));
 	$get_resume_nolook = $db->getone("select count(*) from ".table('personal_jobs_apply')." where personal_look=1 and jobs_id=".$row['id']);
 	$get_resume_all = $db->getone("select count(*) from ".table('personal_jobs_apply')." where jobs_id=".$row['id']);
 	$row['get_resume'] = "( ".$get_resume_nolook['count(*)']." / ".$get_resume_all['count(*)']." )";
@@ -58,7 +48,7 @@ function get_resume_list($offset,$perpage,$get_sql= '')
 	$result = $db->query($get_sql.$limit);
 	while($row = $db->fetch_array($result))
 	{
-	$row['resume_url']=url_rewrite('QS_resumeshow',array('id'=>$row['id']));
+	$row['resume_url']=url_rewrite('HW_resumeshow',array('id'=>$row['id']));
 	$row_arr[] = $row;
 	}
 	return $row_arr;
@@ -83,7 +73,7 @@ function del_resume($id)
 	if (!$db->query("Delete from ".table('resume_search_rtime')." WHERE id IN ({$sqlin})")) return false;
 	if (!$db->query("Delete from ".table('resume_search_key')." WHERE id IN ({$sqlin})")) return false;
 	//填写管理员日志
-	write_log("删除简历id为".$id."的简历 , 共删除".$return."行", $_SESSION['admin_name'],3);
+	write_log("削除履歴書idは".$id."の履歴書 , 削除件数".$return."行", $_SESSION['admin_name'],3);
 	return $return;
 	}
 	return $return;
@@ -123,7 +113,7 @@ function edit_resume_audit($id,$audit,$reason,$pms_notice)
 		if (!$db->query("update  ".table('resume_search_rtime')." SET audit='{$audit}'  WHERE id IN ({$sqlin}) ")) return false;
 		// distribution_resume($id);
 		//填写管理员日志
-		write_log("修改简历id为".$sqlin."的审核状态为".$audit, $_SESSION['admin_name'],3);
+		write_log("変更履歴書idは".$sqlin."の審査状態は".$audit, $_SESSION['admin_name'],3);
 		//发送站内信
 		if ($pms_notice=='1')
 		{
@@ -132,7 +122,7 @@ function edit_resume_audit($id,$audit,$reason,$pms_notice)
 				while($list = $db->fetch_array($result))
 				{
 					$user_info=get_user($list['uid']);
-					$setsqlarr['message']=$audit=='1'?"您创建的简历：{$list['title']},真实姓名：{$list['fullname']},成功通过网站管理员审核！":"您创建的简历：{$list['title']},真实姓名：{$list['fullname']},未通过网站管理员审核,{$reason}";
+					$setsqlarr['message']=$audit=='1'?"作成された履歴書：{$list['title']},名前：{$list['fullname']},ウェブ管理者審査合格！":"作成された履歴書：{$list['title']},名前：{$list['fullname']},管理者審査未合格,{$reason}";
 					$setsqlarr['msgtype']=1;
 					$setsqlarr['msgtouid']=$user_info['uid'];
 					$setsqlarr['msgtoname']=$user_info['username'];
@@ -221,8 +211,8 @@ function edit_resume_photoaudit($id,$audit,$is_del_img)
 				if($is_del_img==1 && $audit==3)
 				{
 					$photo=0;
-					@unlink(QISHI_ROOT_PATH.'data/photo/'.$tb1['photo_img']);
-					@unlink(QISHI_ROOT_PATH.'data/photo/thumb/'.$tb1['photo_img']);
+					@unlink(HIGHWAY_ROOT_PATH.'data/photo/'.$tb1['photo_img']);
+					@unlink(HIGHWAY_ROOT_PATH.'data/photo/thumb/'.$tb1['photo_img']);
 					$db->query("update  ".table('resume')." SET photo_img='',photo_audit='{$audit}',photo='{$photo}' WHERE id='{$i}' LIMIT 1 ");
 					$db->query("update  ".table('resume_search_rtime')." SET photo='{$photo}' WHERE id='{$i}' LIMIT 1 ");
 					$db->query("update  ".table('resume_search_key')." SET photo='{$photo}' WHERE id='{$i}' LIMIT 1 ");
@@ -244,7 +234,7 @@ function edit_resume_photoaudit($id,$audit,$is_del_img)
 			}
 		}
 		//填写管理员日志
-		write_log("修改简历id为".$id."的照片审核状态为".$audit, $_SESSION['admin_name'],3);
+		write_log("変更履歴書idは".$id."の写真審査状態は".$audit, $_SESSION['admin_name'],3);
 	}
 	return true;
 }
@@ -261,7 +251,7 @@ function edit_resume_talent($id,$talent)
 		if (!$db->query("update  ".table('resume_search_rtime')." SET talent={$talent}  WHERE id IN ({$sqlin})")) return false;
 		if (!$db->query("update  ".table('resume_search_key')." SET talent={$talent}  WHERE id IN ({$sqlin})")) return false;
 		//填写管理员日志
-		write_log("修改简历id为".$sqlin."的人才等级为".$talent, $_SESSION['admin_name'],3);
+		write_log("変更履歴書idは".$sqlin."の人材級別は".$talent, $_SESSION['admin_name'],3);
 		return true;
 	}
 	return false;
@@ -274,7 +264,7 @@ function get_resume_uid($uid)
 	$result = $db->query("select * FROM ".table('resume')." where uid='{$uid}'");
 	while($row = $db->fetch_array($result))
 	{ 
-	$row['resume_url']=url_rewrite('QS_resumeshow',array('id'=>$row['id']));
+	$row['resume_url']=url_rewrite('HW_resumeshow',array('id'=>$row['id']));
 	$row_arr[] = $row;
 	}
 	return $row_arr;	
@@ -293,7 +283,7 @@ function refresh_resume($id)
 		if (!$db->query("update  ".table('resume_search_key')." SET refreshtime='".time()."'  WHERE id IN (".$sqlin.")")) return false;
 	}
 	//填写管理员日志
-	write_log("刷新简历id为".$sqlin."的简历 , 共刷新".$return."行", $_SESSION['admin_name'],3);
+	write_log("更新履歴書idは".$sqlin."の履歴書 , 更新件数".$return."行", $_SESSION['admin_name'],3);
 	return $return;
 }
 //**************************个人会员列表
@@ -321,7 +311,7 @@ function delete_member($uid)
 		if (!$db->query("Delete from ".table('members')." WHERE uid IN (".$sqlin.")")) return false;
 		if (!$db->query("Delete from ".table('members_info')." WHERE uid IN (".$sqlin.")")) return false;
 		//填写管理员日志
-		write_log("删除uid为".$sqlin."的会员", $_SESSION['admin_name'],3);
+		write_log("削除uidは".$sqlin."の会員", $_SESSION['admin_name'],3);
 		return true;
 		}
 	return false;
@@ -404,7 +394,7 @@ function reasonaudit_del($id)
 	if (!preg_match("/^(\d{1,10},)*(\d{1,10})$/",$sqlin)) return false;
 	if (!$db->query("Delete from ".table('audit_reason')." WHERE id IN ({$sqlin})")) return false;
 	//填写管理员日志
-	write_log("后台删除日志id为".$sqlin."的日志", $_SESSION['admin_name'],3);
+	write_log("削除ログidは".$sqlin."のログ", $_SESSION['admin_name'],3);
 	return $db->affected_rows();
 }
 //修改用户状态
@@ -415,7 +405,7 @@ function set_user_status($status,$uid)
 	$uid=intval($uid);
 	if (!$db->query("UPDATE ".table('members')." SET status= {$status} WHERE uid={$uid} LIMIT 1")) return false;
 	//填写管理员日志
-	write_log("后台将uid为".$uid."会员的用户状态修改为".$status, $_SESSION['admin_name'],3);
+	write_log("uidは次に".$uid."会員のユーザ状態次に変更".$status, $_SESSION['admin_name'],3);
 	return true;
 }
 ?>

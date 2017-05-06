@@ -1,14 +1,4 @@
 ﻿<?php
- /*
- * 74cms 数据库操作
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
 function write_head($table){
 	global $db;
 	$sql = '';
@@ -19,13 +9,13 @@ function write_head($table){
 }
 function write_file($file, $sql){
 	/*if(!$fp=@fopen($file, "w+")){
-		adminmsg('打开目标文件出错');
+		adminmsg('目標ファイル開くエラー');
 	}
 	if(!@fwrite($fp, $sql)){
-		adminmsg('写入数据出错');
+		adminmsg('データ書き失敗しました');
 	}
 	if(!@fclose($fp)){
-		adminmsg('关闭目标文件出错');
+		adminmsg('目標ファイル閉じる失敗');
 	}*/
     @file_put_contents($file, $sql);
 	return true;
@@ -41,7 +31,7 @@ function get_sqlfile_info($file){
 	$file_info = array('74cms_ver'=>'', 'mysql_ver'=> '', 'add_time'=>'');
     if (!$fp = @fopen($file,'rb'))
 	{
-		adminmsg("打开文件{$file}失败",0);
+		adminmsg("ファイル{$file}開く失敗",0);
 	}
     $str = fread($fp, 200);
     @fclose($fp);

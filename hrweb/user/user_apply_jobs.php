@@ -1,22 +1,12 @@
 ﻿<?php
- /*
- * 74cms 申请职位
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../include/common.inc.php');
 $act = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'app';
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['utype'])) &&  $_COOKIE['QS']['username'] && $_COOKIE['QS']['password'] && $_COOKIE['QS']['uid'])
 {
-	require_once(QISHI_ROOT_PATH.'include/fun_user.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/fun_user.php');
 	if(check_cookie($_COOKIE['QS']['uid'],$_COOKIE['QS']['username'],$_COOKIE['QS']['password']))
 	{
 	update_user_info($_COOKIE['QS']['uid'],false,false);
@@ -25,10 +15,10 @@ if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['
 	else
 	{
 	unset($_SESSION['uid'],$_SESSION['username'],$_SESSION['utype'],$_SESSION['uqqid'],$_SESSION['activate_username'],$_SESSION['activate_email'],$_SESSION["openid"]);
-	setcookie("QS[uid]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[username]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[password]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie("QS[utype]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
+	setcookie("QS[uid]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[username]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[password]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie("QS[utype]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
 	}
 }
 if ($_SESSION['uid']=='' || $_SESSION['username']=='')
@@ -50,7 +40,7 @@ if ($_SESSION['utype']!='2')
 		    </tr>
 		</table>');
 }
-require_once(QISHI_ROOT_PATH.'include/fun_personal.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_personal.php');
 $user=get_user_info($_SESSION['uid']);
 if ($user['status']=="2") 
 {
@@ -65,7 +55,7 @@ if ($user['status']=="2")
 }
 if ($act=="app")
 {		
-		$id=isset($_GET['id'])?$_GET['id']:exit("id 丢失");
+		$id=isset($_GET['id'])?$_GET['id']:exit("id 失った");
 		$jobs=app_get_jobs($id);
 		if (empty($jobs))
 		{
@@ -81,7 +71,7 @@ if ($act=="app")
 		$resume_list=get_auditresume_list($_SESSION['uid']);
 		if (empty($resume_list))
 		{
-		$str="<a href=\"".get_member_url(2,true)."personal_resume.php?act=resume_list\">[查看我的简历]</a>";		
+		$str="<a href=\"".get_member_url(2,true)."personal_resume.php?act=resume_list\">[私の履歴書閲覧]</a>";		
 		exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 			    <tr>
 					<td width="20" align="right"></td>
@@ -113,19 +103,19 @@ $(".ajax_app_tip > span:eq(2)").html(app_max-app_today);
 $("#ajax_app").click(function() {
 	if (app_max-app_today==0 || app_max-app_today<0 )
 	{
-	alert("您今天投简历数量已经超出最大限制！");
+	alert("今日履歴書送信数は最大数を超えました！");
 	}
 	else if ($(".ajax_app :checkbox[checked]").length>(app_max-app_today))
 	{
-	alert("您今天还可以投递"+(app_max-app_today)+"个简历，已选职位超出了最大限制！");
+	alert("送信可能件数"+(app_max-app_today)+"件履歴書，選択された職位は最大制限を超えました！");
 	}
 	else if ($(".ajax_app :checkbox[checked]").length==0)
 	{
-	alert("请选择投递的职位！");
+	alert("希望職位を選択してください！");
 	}
 	else if ($("#resumeid").val()=="")
 	{
-	alert("请选择你的简历！");
+	alert("履歴書を選択してください！");
 	}
 	else
 	{
@@ -156,7 +146,7 @@ $("#ajax_app").click(function() {
 				$("#notice").hide();
 				$("#waiting").hide();
 				$("#app_ok").hide();
-				$("#error_msg").html("您投递过此职位，不能重复投递");
+				$("#error_msg").html("この職位すでに申し込みしました");
 				$("#error").show();
 			}
 			else
@@ -165,7 +155,7 @@ $("#ajax_app").click(function() {
 				$("#notice").hide();
 				$("#waiting").hide();
 				$("#app_ok").hide();
-				$("#error_msg").html("投递失败！"+data);
+				$("#error_msg").html("送信失敗！"+data);
 				$("#error").show();
 			}
 	 	 })
@@ -223,7 +213,7 @@ $("#ajax_app").click(function() {
     <tr>
 		<td></td>
 		<td>
-			<input type="button" name="Submit"  id="ajax_app" class="but130lan" value="投递" />
+			<input type="button" name="Submit"  id="ajax_app" class="but130lan" value="送信" />
 		</td>
     </tr>
 </table>
@@ -268,20 +258,20 @@ $("#ajax_app").click(function() {
 
 elseif ($act=="app_save")
 {
-	$jobsid=isset($_POST['jobsid'])?$_POST['jobsid']:exit("出错了");
-	$resumeid=isset($_POST['resumeid'])?intval($_POST['resumeid']):exit("出错了");
+	$jobsid=isset($_POST['jobsid'])?$_POST['jobsid']:exit("エラー発生");
+	$resumeid=isset($_POST['resumeid'])?intval($_POST['resumeid']):exit("エラー発生");
 	$notes=isset($_POST['notes'])?trim($_POST['notes']):"";
 	$pms_notice=intval($_POST['pms_notice']);
 	$jobsarr=app_get_jobs($jobsid);
 	if (empty($jobsarr))
 	{
-	exit("职位丢失");
+	exit("職位失った");
 	}
 	$resume_basic=get_resume_basic($_SESSION['uid'],$resumeid);
 	$resume_basic = array_map("addslashes", $resume_basic);
 	if (empty($resume_basic))
 	{
-	exit("简历丢失");
+	exit("履歴書失った");
 	}
 	$i=0;
 	foreach($jobsarr as $jobs)
@@ -300,7 +290,7 @@ elseif ($act=="app_save")
 			$addarr['company_name']=$jobs['companyname'];
 			$addarr['company_uid']=$jobs['uid'];
 			$addarr['notes']= $notes;
-			if (strcasecmp(QISHI_DBCHARSET,"utf8")!=0)
+			if (strcasecmp(HIGHWAY_DBCHARSET,"utf8")!=0)
 			{
 			$addarr['notes']=utf8_to_gbk($addarr['notes']);
 			}
@@ -324,12 +314,12 @@ elseif ($act=="app_save")
 					//站内信
 					if($pms_notice=='1'){
 						$user=$db->getone("select username from ".table('members')." where uid ={$jobs['uid']} limit 1");
-						$jobs_url=url_rewrite('QS_jobsshow',array('id'=>$jobs['id']));
-						$resume_url=url_rewrite('QS_resumeshow',array('id'=>$resumeid));
-						$message=$resume_basic['fullname'].'申请了您发布的职位：<a href="'.$jobs_url.'" target="_blank">'.$jobs['jobs_name'].'</a>,<a href="'.$resume_url.'" target="_blank">点击查看</a>';
+						$jobs_url=url_rewrite('HW_jobsshow',array('id'=>$jobs['id']));
+						$resume_url=url_rewrite('HW_resumeshow',array('id'=>$resumeid));
+						$message=$resume_basic['fullname'].'ご配布された職位を申し込みました：<a href="'.$jobs_url.'" target="_blank">'.$jobs['jobs_name'].'</a>,<a href="'.$resume_url.'" target="_blank">閲覧</a>';
 						write_pmsnotice($jobs['uid'],$user['username'],$message);
 					}
-					write_memberslog($_SESSION['uid'],2,1301,$_SESSION['username'],"投递了简历，职位:{$jobs['jobs_name']}");
+					write_memberslog($_SESSION['uid'],2,1301,$_SESSION['username'],"投递了履歴書，職位:{$jobs['jobs_name']}");
 			}
 			$i=$i+1;
 	 }

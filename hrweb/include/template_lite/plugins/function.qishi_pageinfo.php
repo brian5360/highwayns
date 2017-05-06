@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_pageinfo($params, &$smarty)
+function tpl_function_highway_pageinfo($params, &$smarty)
 {
 global $db,$_CFG;
 $arr=explode(',',$params['set']);
@@ -8,21 +8,21 @@ foreach($arr as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "调用":
+	case "CALL":
 		$aset['alias'] = $a[1];
 		break;
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
-	case "分类ID":
+	case "分類ID":
 		$aset['id'] = $a[1];
 		break;		
 	}
 }
 if (is_array($aset))$aset=array_map("get_smarty_request",$aset);
-$aset['alias']=$aset['alias']?$aset['alias']:"QS_index";
+$aset['alias']=$aset['alias']?$aset['alias']:"HW_index";
 $aset['listname']=$aset['listname']?$aset['listname']:"list";
-if ($aset['alias']=="QS_newslist" && $aset['id'])
+if ($aset['alias']=="HW_newslist" && $aset['id'])
 {
 	$sql = "select title,description,keywords from ".table('article_category')." where id = ".intval($aset['id'])." LIMIT  1";
 	$info=$db->getone($sql);

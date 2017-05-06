@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 共用函数
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-if(!defined('IN_QISHI')) die('Access Denied!');
+if(!defined('IN_HIGHWAY')) die('Access Denied!');
 function table($table)
 {
  	global $pre;
@@ -20,10 +10,10 @@ function showmsg($msg_detail, $msg_type = 0, $links = array(), $auto_redirect = 
 	global $smarty;
     if (count($links) == 0)
     {
-        $links[0]['text'] = '返回上一页';
+        $links[0]['text'] = '前頁へ';
         $links[0]['href'] = 'javascript:history.go(-1)';
     }
-   $smarty->assign('ur_here',     '系统提示');
+   $smarty->assign('ur_here',     'システムからのお知らせ');
    $smarty->assign('msg_detail',  $msg_detail);
    $smarty->assign('msg_type',    $msg_type);
    $smarty->assign('links',       $links);
@@ -54,7 +44,7 @@ $strtrim=rtrim($str,']');
 }
 function get_cache($cachename)
 {
-	$cache_file_path =QISHI_ROOT_PATH. "data/cache_".$cachename.".php";
+	$cache_file_path =HIGHWAY_ROOT_PATH. "data/cache_".$cachename.".php";
 	@include($cache_file_path);
 	return $data;
 }
@@ -103,7 +93,7 @@ function convertip($ip) {
 		} elseif($iparray[0] > 255 || $iparray[1] > 255 || $iparray[2] > 255 || $iparray[3] > 255) {
 			$return = '- Invalid IP Address';
 		} else {
-			$tinyipfile = QISHI_ROOT_PATH.'data/tinyipdata.dat';
+			$tinyipfile = HIGHWAY_ROOT_PATH.'data/tinyipdata.dat';
 			if(@file_exists($tinyipfile)) {
 				$return = convertip_tiny($ip, $tinyipfile);
 			} 
@@ -183,17 +173,17 @@ function sub_day($endday,$staday,$range='')
 	elseif($value >= 60 && $value < 3600)
 	{
 		$min = intval($value / 60);
-		return $min."分钟";
+		return $min."分";
 	}
 	elseif($value >=3600 && $value < 86400)
 	{
 		$h = intval($value / 3600);
-		return $h."小时";
+		return $h."時間";
 	}
 	elseif($value >= 86400 && $value < 86400*30)
 	{
 		$d = intval($value / 86400);
-		return intval($d)."天";
+		return intval($d)."日";
 	}
 	elseif($value >= 86400*30 && $value < 86400*30*12)
 	{
@@ -219,12 +209,12 @@ function daterange($endday,$staday,$format='Y-m-d',$color='',$range=3)
 	elseif($value >= 60 && $value < 3600)
 	{
 		$min = intval($value / 60);
-		$return=$min."分钟前";
+		$return=$min."分前";
 	}
 	elseif($value >=3600 && $value < 86400)
 	{
 		$h = intval($value / 3600);
-		$return=$h."小时前";
+		$return=$h."時間前";
 	}
 	elseif($value >= 86400)
 	{
@@ -235,7 +225,7 @@ function daterange($endday,$staday,$format='Y-m-d',$color='',$range=3)
 		}
 		else
 		{
-		$return=$d."天前";
+		$return=$d."日前";
 		}
 	}
 	if ($color)
@@ -261,7 +251,7 @@ function cut_str($string, $length, $start=0,$dot='')
 function smtp_mail($sendto_email,$subject,$body,$From='',$FromName='')
 {	
 	global $_CFG;
-	require_once(QISHI_ROOT_PATH.'phpmailer/class.phpmailer.php');
+	require_once(HIGHWAY_ROOT_PATH.'phpmailer/class.phpmailer.php');
 	$mail = new PHPMailer();
 	$mailconfig=get_cache('mailconfig');
 	$mailconfig['smtpservers']=explode('|-_-|',$mailconfig['smtpservers']);
@@ -286,7 +276,7 @@ function smtp_mail($sendto_email,$subject,$body,$From='',$FromName='')
 	{
 		if (empty($mailconfig['smtpservers']) || empty($mailconfig['smtpusername']) || empty($mailconfig['smtppassword']) || empty($mailconfig['smtpfrom']))
 		{
-		write_syslog(2,'MAIL',"邮件配置信息不完整");
+		write_syslog(2,'MAIL',"メール設定情報不完全");
 		return false;
 		}
 	$mail->IsSMTP();
@@ -307,7 +297,7 @@ function smtp_mail($sendto_email,$subject,$body,$From='',$FromName='')
 	{
 	$mail->IsMail();
 	}
-	$mail->CharSet = QISHI_CHARSET;
+	$mail->CharSet = HIGHWAY_CHARSET;
 	$mail->Encoding = "base64";
 	$mail->AddReplyTo($From,$FromName);
 	$mail->AddAddress($sendto_email,"");
@@ -417,7 +407,7 @@ function send_sms($mobile,$content)
 	}
 	else
 	{
-		return https_request("http://www.74cms.com/SMSsend.php?sms_name={$sms['notice_sms_name']}&sms_key={$sms['notice_sms_key']}&mobile={$mobile}&content={$content}");
+		return https_request("http://www.jp.highwayns.com/SMSsend.php?sms_name={$sms['notice_sms_name']}&sms_key={$sms['notice_sms_key']}&mobile={$mobile}&content={$content}");
 	
 	}	
 }
@@ -432,7 +422,7 @@ function captcha_send_sms($mobile,$content)
 	}
 	else
 	{
-		return https_request("http://www.74cms.com/SMSsend.php?sms_name={$sms['captcha_sms_name']}&sms_key={$sms['captcha_sms_key']}&mobile={$mobile}&content={$content}");
+		return https_request("http://www.jp.highwayns.com/SMSsend.php?sms_name={$sms['captcha_sms_name']}&sms_key={$sms['captcha_sms_key']}&mobile={$mobile}&content={$content}");
 	}	
 }
 //其他类短信接口
@@ -446,7 +436,7 @@ function free_send_sms($mobile,$content)
 	}
 	else
 	{
-	return https_request("http://www.74cms.com/SMSsend5.php?sms_name={$sms['free_sms_name']}&sms_key={$sms['free_sms_key']}&mobile={$mobile}&content={$content}");
+	return https_request("http://www.jp.highwayns.com/SMSsend5.php?sms_name={$sms['free_sms_name']}&sms_key={$sms['free_sms_key']}&mobile={$mobile}&content={$content}");
 	}	
 }
 function execution_crons()
@@ -455,7 +445,7 @@ function execution_crons()
 	$crons=$db->getone("select * from ".table('crons')." WHERE (nextrun<".time()." OR nextrun=0) AND available=1 LIMIT 1  ");
 	if (!empty($crons))
 	{
-		require_once(QISHI_ROOT_PATH."include/crons/".$crons['filename']);
+		require_once(HIGHWAY_ROOT_PATH."include/crons/".$crons['filename']);
 	}
 }
 function get_tpl($type,$id)
@@ -746,9 +736,6 @@ function filter_url($alias){
 	//     exit();
 	    
 	// }
-	/*
-	不跳转404，重定向到正确页面
-	 */
 	$param = array();
 	if(!empty($url_arr[1])){
 		$param_arr = explode("&", $url_arr[1]);
@@ -970,10 +957,10 @@ function send_template_message($data){
 //检查缓存
 function check_cache($cache,$dir,$days=1)
 {
-	$cachename=QISHI_ROOT_PATH.'data/'.$dir."/".$cache;
-	if (!is_writable(QISHI_ROOT_PATH.'data/'.$dir.'/'))
+	$cachename=HIGHWAY_ROOT_PATH.'data/'.$dir."/".$cache;
+	if (!is_writable(HIGHWAY_ROOT_PATH.'data/'.$dir.'/'))
 	{
-	exit("请先将“".$dir."”目录设置可读写！");
+	exit("さきに“".$dir."”フォルダー読み書きに設定！");
 	}
 	if (file_exists($cachename))
 	{
@@ -989,17 +976,17 @@ function check_cache($cache,$dir,$days=1)
 function write_cache($cache, $json, $dir)
 {
 	$content = $json;
-	$cachename=QISHI_ROOT_PATH.'data/'.$dir."/".$cache;
+	$cachename=HIGHWAY_ROOT_PATH.'data/'.$dir."/".$cache;
 	if (!file_put_contents($cachename, $content, LOCK_EX))
 	{
 		$fp = @fopen($cachename, 'wb+');
 		if (!$fp)
 		{
-			exit('生cache文件失败，请设置“'.$dir.'”的读写权限');
+			exit('cacheファイル作成失敗，設定してください“'.$dir.'”の読みと書き権限');
 		}
 		if (!@fwrite($fp, trim($content)))
 		{
-			exit('生cache文件失败，请设置“'.$dir.'”的读写权限');
+			exit('cacheファイル作成失敗，設定してください“'.$dir.'”の読みと書き権限');
 		}
 		@fclose($fp);
 	}

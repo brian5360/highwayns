@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_help_category($params, &$smarty)
+function tpl_function_highway_help_category($params, &$smarty)
 {
 global $db;
 $arr=explode(',',$params['set']);
@@ -8,25 +8,25 @@ foreach($arr as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
-	case "名称长度":
+	case "名称長さ":
 		$aset['titlelen'] = $a[1];
 		break;
-	case "填补字符":
+	case "記号を入力してください":
 		$aset['dot'] = $a[1];
 		break;
-	case "大类":
+	case "大分類":
 		$aset['classify'] = $a[1];
 		break;
 	case "小类":
 		$aset['typeid'] = $a[1];
 		break;
-	case "页面":
+	case "ページ":
 		$aset['showname'] = $a[1];
 		break;
-	case "显示数目":
+	case "表示数目":
 		$aset['num'] = $a[1];
 		break;
 	}
@@ -35,7 +35,7 @@ if (is_array($aset)) $aset=array_map("get_smarty_request",$aset);
 $aset['listname']=isset($aset['listname'])?$aset['listname']:"list";
 $aset['titlelen']=isset($aset['titlelen'])?intval($aset['titlelen']):8;
 $aset['dot']=isset($aset['dot'])?$aset['dot']:'';
-$aset['showname']=isset($aset['showname'])?$aset['showname']:'QS_helplist';
+$aset['showname']=isset($aset['showname'])?$aset['showname']:'HW_helplist';
 isset($aset['typeid'])? $wheresqlarr['id']=intval($aset['typeid']):'';
 isset($aset['classify'])? $wheresqlarr['parentid']=intval($aset['classify']):'';
 	if (is_array($wheresqlarr))

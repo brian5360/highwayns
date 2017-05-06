@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms WAP
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
- if(!defined('IN_QISHI'))
+ if(!defined('IN_HIGHWAY'))
  {
  	die('Access Denied!');
  }
@@ -70,7 +60,7 @@ function jobs_one($id)
 			wap_update_interview(intval($_SESSION['uid']),$val['id']);
 		}
 	}
-	$val['amount']=$val['amount']=="0"?'若干':$val['amount'];
+	$val['amount']=$val['amount']=="0"?'多少':$val['amount'];
 	$profile=company_one($val['company_id']);
 	$val['company']=$profile;
 	$val['contents'] = htmlspecialchars_decode($val['contents'],ENT_QUOTES);
@@ -97,7 +87,7 @@ function hunter_jobs_one($id)
 	$wheresql=" WHERE id='{$id}'";
 	$sql = "select * from ".table('hunter_jobs').$wheresql." LIMIT 1";
 	$val=$db->getone($sql);
-	$val['amount']=$val['amount']=="0"?'若干':$val['amount'];
+	$val['amount']=$val['amount']=="0"?'多少':$val['amount'];
 	$profile=hunter_one($val['uid']);
 	$val['company']=$profile;
 	return $val;
@@ -119,11 +109,11 @@ function resume_one($id)
 	{
 		if($val['sex']==1)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"先生");
+			$val['fullname']=cut_str($val['fullname'],1,0,"男");
 		}
 		elseif($val['sex']==2)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"女士");
+			$val['fullname']=cut_str($val['fullname'],1,0,"女");
 		}
 		$val['fullname_']=$val['fullname'];	
 	}
@@ -139,7 +129,7 @@ function resume_one($id)
 		$val['talent_'] = "2";
 		$val['talent'] = "高级";
 	}
-	$val['fullname_3']=cut_str($val['fullname'],1,0,"先生/女士");
+	$val['fullname_3']=cut_str($val['fullname'],1,0,"男/女");
 	$val['age']=date("Y")-$val['birthdate'];
 	$val['education_list']=get_this_education_all($val['uid'],$val['id']);
 	$val['work_list']=get_this_work_all($val['uid'],$val['id']);
@@ -160,10 +150,10 @@ function WapShowMsg($msg_detail, $msg_type = 0, $links = array())
 	global $smarty;
     if (count($links) == 0)
     {
-        $links[0]['text'] = '返回上一页';
+        $links[0]['text'] = '前頁へ';
         $links[0]['href'] = 'javascript:history.go(-1)';
     }
-   $smarty->assign('ur_here',     '系统提示');
+   $smarty->assign('ur_here',     'システムからのお知らせ');
    $smarty->assign('msg_type',    $msg_type);
    $smarty->assign('msg_detail',  $msg_detail);
    $smarty->assign('links',       $links);
@@ -173,12 +163,12 @@ function WapShowMsg($msg_detail, $msg_type = 0, $links = array())
 }
 function wapmulti($num, $perpage, $curpage, $mpurl)
 {
-	$lang['home_page']="首页";
-	$lang['last_page']="上一页";
-	$lang['next_page']="下一页";
-	$lang['end_page']="尾页";
-	$lang['page']="页";
-	$lang['turn_page']="翻页";
+	$lang['home_page']="トップ";
+	$lang['last_page']="前頁";
+	$lang['next_page']="次頁";
+	$lang['end_page']="末頁";
+	$lang['page']="ページ";
+	$lang['turn_page']="次ページ";
 	$multipage = '';
 	$mpurl .= strpos($mpurl, '?') ? '&amp;' : '?';
 	if($num > $perpage) {
@@ -319,7 +309,7 @@ function wap_get_user_type($uid)
 //注册会员
 function wap_user_register($username,$password,$member_type=0,$email,$uc_reg=true)
 {
-	global $db,$timestamp,$_CFG,$online_ip,$QS_pwdhash;
+	global $db,$timestamp,$_CFG,$online_ip,$HW_pwdhash;
 	$member_type=intval($member_type);
 	$ck_username=get_user_inusername($username);
 	$ck_email=get_user_inemail($email);
@@ -336,7 +326,7 @@ function wap_user_register($username,$password,$member_type=0,$email,$uc_reg=tru
 	return -3;
 	}
 	$pwd_hash=randstr();
-	$password_hash=md5(md5($password).$pwd_hash.$QS_pwdhash);
+	$password_hash=md5(md5($password).$pwd_hash.$HW_pwdhash);
 	$setsqlarr['username']=$username;
 	$setsqlarr['password']=$password_hash;
 	$setsqlarr['pwd_hash']=$pwd_hash;
@@ -356,7 +346,7 @@ return $insert_id;
 }
 function wap_user_login($account,$password,$account_type=1,$uc_login=true,$expire=NULL)
 {
-	global $timestamp,$online_ip,$QS_pwdhash;
+	global $timestamp,$online_ip,$HW_pwdhash;
 	$usinfo = $login = array();
 	$success = false;
 	if (preg_match("/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/",$account))
@@ -382,11 +372,11 @@ function wap_user_login($account,$password,$account_type=1,$uc_login=true,$expir
 	{
 		$pwd_hash=$usinfo['pwd_hash'];
 		$usname=$usinfo['username'];
-		$pwd=md5(md5($password).$pwd_hash.$QS_pwdhash);
+		$pwd=md5(md5($password).$pwd_hash.$HW_pwdhash);
 		if ($usinfo['password']==$pwd)
 		{
 		wap_update_user_info($usinfo['uid'],true,true,$expire);
-		$login['qs_login']=get_member_wap_url($usinfo['utype']);
+		$login['hw_login']=get_member_wap_url($usinfo['utype']);
 		$success=true;
 		}
 		else
@@ -399,7 +389,7 @@ function wap_user_login($account,$password,$account_type=1,$uc_login=true,$expir
 }
 function wap_update_user_info($uid,$record=true,$setcookie=true,$cookie_expire=NULL)
  {
- 	global $timestamp, $online_ip,$db,$QS_cookiepath,$QS_cookiedomain,$_CFG;//3.4升级修改 引入变量$_CFG
+ 	global $timestamp, $online_ip,$db,$HW_cookiepath,$HW_cookiedomain,$_CFG;//3.4升级修改 引入变量$_CFG
 	$user = wap_get_user_inid($uid);
 	if (empty($user))
 	{
@@ -414,10 +404,10 @@ function wap_update_user_info($uid,$record=true,$setcookie=true,$cookie_expire=N
 	if ($setcookie)
 	{
 		$expire=intval($cookie_expire)>0?time()+3600*24*$cookie_expire:0;
-		setcookie('QS[uid]',$user['uid'],$expire,$QS_cookiepath,$QS_cookiedomain);
-		setcookie('QS[username]',$user['username'],$expire,$QS_cookiepath,$QS_cookiedomain);
-		setcookie('QS[password]',$user['password'],$expire,$QS_cookiepath,$QS_cookiedomain);
-		setcookie('QS[utype]',$user['utype'], $expire,$QS_cookiepath,$QS_cookiedomain);
+		setcookie('QS[uid]',$user['uid'],$expire,$HW_cookiepath,$HW_cookiedomain);
+		setcookie('QS[username]',$user['username'],$expire,$HW_cookiepath,$HW_cookiedomain);
+		setcookie('QS[password]',$user['password'],$expire,$HW_cookiepath,$HW_cookiedomain);
+		setcookie('QS[utype]',$user['utype'], $expire,$HW_cookiepath,$HW_cookiedomain);
 	}
 	if ($record)
 	{

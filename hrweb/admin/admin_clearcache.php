@@ -1,19 +1,9 @@
 ﻿<?php
- /*
- * 74cms 清除缓存
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../data/config.php');
 require_once(dirname(__FILE__).'/include/admin_common.inc.php');
 $act = !empty($_REQUEST['act']) ? trim($_REQUEST['act']) : 'select_cache';
-$smarty->assign('pageheader',"更新缓存");
+$smarty->assign('pageheader',"Cache更新");
 if ($act=="select_cache")
 {
 	
@@ -58,7 +48,7 @@ elseif ($act=="clear_cache")
 		}
 		else
 		{
-		adminmsg('请选择项目！',1);
+		adminmsg('項目を選択してください！',1);
 		}
 	adminmsg('更新成功！',2);
 }

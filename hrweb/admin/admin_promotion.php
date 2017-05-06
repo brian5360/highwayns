@@ -1,25 +1,15 @@
 ﻿<?php
- /*
- * 74cms 企业推广
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../data/config.php');
 require_once(dirname(__FILE__).'/include/admin_common.inc.php');
 require_once(ADMIN_ROOT_PATH.'include/admin_company_fun.php');
 $act = !empty($_GET['act']) ? trim($_GET['act']) : 'list';
 check_permissions($_SESSION['admin_purview'],"com_promotion");
-$smarty->assign('pageheader',"企业推广");
+$smarty->assign('pageheader',"企業広告");
 if($act == 'list')
 {
 	get_token();
-	require_once(QISHI_ROOT_PATH.'include/page.class.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/page.class.php');
 	$oderbysql=" order BY p.cp_id DESC ";
 	$joinsql = " INNER JOIN ".table('jobs')." AS j INNER JOIN ".table('promotion_category')." AS c  ON p.cp_jobid=j.id AND p.cp_promotionid=c.cat_id ";
 	$key=isset($_GET['key'])?trim($_GET['key']):"";
@@ -80,19 +70,19 @@ elseif($act == 'promotion_save')
 	$setsqlarr['cp_days']=intval($_POST['days']);
 	if ($setsqlarr['cp_days']==0)
 	{
-		adminmsg("请填写推广天数",1);
+		adminmsg("広告日数を入力してください",1);
 	}
 	$setsqlarr['cp_jobid']=intval($_POST['jobid']);
 	$setsqlarr['cp_promotionid']=intval($_POST['promotionid']);
 	if (check_promotion($setsqlarr['cp_jobid'],$setsqlarr['cp_promotionid']))
 	{
-		adminmsg("此职位正在执行此推广！请选择其他职位或者其他推广方案",1);
+		adminmsg("この職位はこの広告を実行中！その他職位或者その他広告ケースを選択してください",1);
 	}
 	else
 	{
 		if ($setsqlarr['cp_promotionid']=="4")
 		{
-		$setsqlarr['cp_val']=!empty($_POST['val'])?$_POST['val']:adminmsg("请选择颜色",1);
+		$setsqlarr['cp_val']=!empty($_POST['val'])?$_POST['val']:adminmsg("色を選択してください",1);
 		}
 		$setsqlarr['cp_starttime']=time();
 		$setsqlarr['cp_endtime']=strtotime("{$setsqlarr['cp_days']} day");
@@ -105,12 +95,12 @@ elseif($act == 'promotion_save')
 		{
 		$u=get_user($setsqlarr['cp_uid']);
 		$promotion=get_promotion_cat_one($setsqlarr['cp_promotionid']);
-		write_memberslog($u['uid'],1,3004,$u['username'],"管理员增加推广：{$promotion['cat_name']},职位ID：{$setsqlarr['cp_jobid']}");
+		write_memberslog($u['uid'],1,3004,$u['username'],"管理者広告追加：{$promotion['cat_name']},職位ID：{$setsqlarr['cp_jobid']}");
 		set_job_promotion($setsqlarr['cp_jobid'],$setsqlarr['cp_promotionid'],$setsqlarr['cp_val']);
-		write_log("添加推广：{$promotion['cat_name']},职位ID：{$setsqlarr['cp_jobid']}", $_SESSION['admin_name'],3);
-		$link[0]['text'] = "返回列表";
+		write_log("広告追加：{$promotion['cat_name']},職位ID：{$setsqlarr['cp_jobid']}", $_SESSION['admin_name'],3);
+		$link[0]['text'] = "一覧に戻る";
 		$link[0]['href'] = "?act=list";
-		adminmsg("添加成功",2,$link);		
+		adminmsg("追加成功",2,$link);		
 		}
 	}
 }
@@ -153,10 +143,10 @@ elseif($act == 'promotion_edit_save')
 		 	$db->query("UPDATE ".table('jobs')." SET highlight='{$setsqlarr['cp_val']}' WHERE id='{$jobid}' ");
 			$db->query("UPDATE ".table('jobs_tmp')." SET highlight='{$setsqlarr['cp_val']}' WHERE id='{$jobid}' ");
 		}
-		write_log("修改推广id为".$setsqlarr['cp_id']."的推广", $_SESSION['admin_name'],3);
-		$link[0]['text'] = "推广列表";
+		write_log("変更広告idは".$setsqlarr['cp_id']."の広告", $_SESSION['admin_name'],3);
+		$link[0]['text'] = "広告一覧";
 		$link[0]['href'] ="?act=list";
-		adminmsg("修改成功！",2,$link);
+		adminmsg("変更成功！",2,$link);
 	}	
 }
 elseif($act == 'promotion_del')
@@ -164,11 +154,11 @@ elseif($act == 'promotion_del')
 	get_token();
 	if ($n=del_promotion($_POST['id']))
 	{
-	adminmsg("取消成功！共取消 {$n} 行",2);
+	adminmsg("取消成功！取消行数 {$n} ",2);
 	}
 	else
 	{
-	adminmsg("取消失败！",0);
+	adminmsg("取消失敗！",0);
 	}
 }
 elseif($act == 'category')
@@ -189,7 +179,7 @@ elseif($act == 'edit_category')
 elseif($act=='edit_category_save')
 {	
 	check_token();
-	$setsqlarr['cat_name']=trim($_POST['cat_name'])?trim($_POST['cat_name']):adminmsg('您没有填写方案名称！',1);
+	$setsqlarr['cat_name']=trim($_POST['cat_name'])?trim($_POST['cat_name']):adminmsg('ケース名称を入力してください！',1);
 	$setsqlarr['cat_available']=intval($_POST['cat_available']);
 	$setsqlarr['cat_minday']=intval($_POST['cat_minday']);
 	$setsqlarr['cat_maxday']=intval($_POST['cat_maxday']);
@@ -199,13 +189,13 @@ elseif($act=='edit_category_save')
 	$wheresql=" cat_id='".intval($_POST['id'])."'";
 		if ($db->updatetable(table('promotion_category'),$setsqlarr,$wheresql))
 		{
-		$link[0]['text'] = "方案列表";
+		$link[0]['text'] = "ケース一覧";
 		$link[0]['href'] ="?act=category";
-		adminmsg("修改成功！",2,$link);
+		adminmsg("変更成功！",2,$link);
 		}
 		else
 		{
-		adminmsg("修改失败！",0);
+		adminmsg("変更失敗！",0);
 		}
 }
 ?>

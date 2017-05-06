@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_notice_show($params, &$smarty)
+function tpl_function_highway_notice_show($params, &$smarty)
 {
 global $db;
 $arr=explode(',',$params['set']);
@@ -8,10 +8,10 @@ foreach($arr as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "公告ID":
+	case "お知らせID":
 		$aset['id'] = $a[1];
 		break;
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
 	}

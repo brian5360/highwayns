@@ -1,22 +1,12 @@
 ﻿<?php
- /*
- * 74cms 下载简历
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../include/common.inc.php');
 $act = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'download';
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['utype'])) &&  $_COOKIE['QS']['username'] && $_COOKIE['QS']['password'] && $_COOKIE['QS']['uid'])
 {
-	require_once(QISHI_ROOT_PATH.'include/fun_user.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/fun_user.php');
 	if(check_cookie($_COOKIE['QS']['uid'],$_COOKIE['QS']['username'],$_COOKIE['QS']['password']))
 	{
 	update_user_info($_COOKIE['QS']['uid'],false,false);
@@ -25,10 +15,10 @@ if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['
 	else
 	{
 	unset($_SESSION['uid'],$_SESSION['username'],$_SESSION['utype'],$_SESSION['uqqid'],$_SESSION['activate_username'],$_SESSION['activate_email'],$_SESSION["openid"]);
-	setcookie("QS[uid]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[username]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[password]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie("QS[utype]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
+	setcookie("QS[uid]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[username]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[password]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie("QS[utype]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
 	}
 }
 if ($_SESSION['uid']=='' || $_SESSION['username']=='')
@@ -49,11 +39,11 @@ if ($_SESSION['utype']!='1')
 		    </tr>
 		</table>');
 }
-$id=!empty($_GET['id'])?intval($_GET['id']):exit("出错了");
+$id=!empty($_GET['id'])?intval($_GET['id']):exit("エラー発生");
 $resumeshow=get_resume_basic_one($id);
-require_once(QISHI_ROOT_PATH.'include/fun_company.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_company.php');
 $user=get_user_info($_SESSION['uid']);
-$downresumeurl="<a href=\"".get_member_url(1,true)."company_recruitment.php?act=down_resume_list&talent=2\">[查看已下载的高级简历]</a>";
+$downresumeurl="<a href=\"".get_member_url(1,true)."company_recruitment.php?act=down_resume_list&talent=2\">[ダウンロード済みの高级履歴書を閲覧する]</a>";
 if ($user['status']=='2'){
 	exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 		    <tr>
@@ -80,7 +70,7 @@ if(check_jobs_apply($id,$_SESSION['uid']))
 }
 if (check_down_resumeid($id,$_SESSION['uid'])) 
 {
-	$str="<a href=\"".get_member_url(1,true)."company_recruitment.php?act=down_resume_list\">[查看我的下载的简历]</a>";
+	$str="<a href=\"".get_member_url(1,true)."company_recruitment.php?act=down_resume_list\">[ダウンロードされた履歴書を閲覧する]</a>";
 	exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 			<tr>
 				<td width="20" align="right"></td>
@@ -93,7 +83,7 @@ if (check_down_resumeid($id,$_SESSION['uid']))
 if ($_CFG['down_resume_limit']=="1")
 {
 	$user_jobs=get_auditjobs($_SESSION['uid']);//审核通过的职位
-	$strurl="你没有发布职位或审核未通过导致无法下载简历。<a href=\"".get_member_url(1,true)."company_jobs.php?act=jobs\">[职位管理]</a>";
+	$strurl="配布職位がありませんまたは審査未合格、履歴書ダウンロードができません。<a href=\"".get_member_url(1,true)."company_jobs.php?act=jobs\">[職位管理]</a>";
 	if (empty($user_jobs))
 	{
 		exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
@@ -114,11 +104,11 @@ elseif ($resumeshow['display_name']=="3")
 {
 	if($resumeshow['sex']==1)
 	{
-		$resumeshow['resume_name']=cut_str($resumeshow['fullname'],1,0,"先生");
+		$resumeshow['resume_name']=cut_str($resumeshow['fullname'],1,0,"男");
 	}
 	elseif($resumeshow['sex']==2)
 	{
-		$resumeshow['resume_name']=cut_str($resumeshow['fullname'],1,0,"女士");
+		$resumeshow['resume_name']=cut_str($resumeshow['fullname'],1,0,"女");
 	}
 }
 else
@@ -156,7 +146,7 @@ if ($_CFG['operation_mode']=="2")
 {
 	if (empty($setmeal) || ($setmeal['endtime']<time() && $setmeal['endtime']<>"0"))
 	{
-		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 		exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 			    <tr>
 					<td width="20" align="right"></td>
@@ -168,7 +158,7 @@ if ($_CFG['operation_mode']=="2")
 	}
 	elseif ($resumeshow['talent']=='2' && $setmeal['download_resume_senior']<=0)
 	{
-		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 		exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 			    <tr>
 					<td width="20" align="right"></td>
@@ -180,7 +170,7 @@ if ($_CFG['operation_mode']=="2")
 	}
 	elseif ($resumeshow['talent']=='1' && $setmeal['download_resume_ordinary']<=0)
 	{
-		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+		$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 		exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 			    <tr>
 					<td width="20" align="right"></td>
@@ -197,11 +187,11 @@ if ($act=="download")
 	{
 		if ($resumeshow['talent']=='2')
 		{	
-			$tip="提示：您还可以下载<span> {$setmeal['download_resume_senior']}</span>份高级人才简历";
+			$tip="お知らせ：ダウンロード可能な<span> {$setmeal['download_resume_senior']}</span>件高级人材履歴書";
 		}
 		else
 		{	
-			$tip="提示：您还可以下载<span> {$setmeal['download_resume_ordinary']}</span>份普通人才简历";
+			$tip="お知らせ詳細：ダウンロード可能な普通の履歴書数<span> {$setmeal['download_resume_ordinary']}</span>件";
 		}
 		
 	}
@@ -212,8 +202,8 @@ if ($act=="download")
 		$mypoints=get_user_points($_SESSION['uid']);
 		if  ($mypoints<$points)
 		{
-			$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[充值{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-			$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+			$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[振込{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+			$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 			if (!empty($setmeal) && $_CFG['setmeal_to_points']=="1")
 			{
 				exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
@@ -237,7 +227,7 @@ if ($act=="download")
 				</table>');
 			}			
 		}
-		$tip="下载此份简历将扣除<span> {$points}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，您目前共有<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
+		$tip="この履歴書ダウンロードポイント<span> {$points}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，総ポイントは<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
 	}
 ?>
 <script type="text/javascript">
@@ -245,7 +235,7 @@ $(".but100").hover(function(){$(this).addClass("but100_hover")},function(){$(thi
 $("#ajax_download_r").click(function() {
 		var id="<?php echo $id?>";
 		var tsTimeStamp= new Date().getTime();
-			$("#ajax_download_r").val("处理中...");
+			$("#ajax_download_r").val("処理中...");
 			$("#ajax_download_r").attr("disabled","disabled");
  			 var pms_notice=$("#pms_notice").attr("checked");
 			 if(pms_notice) pms_notice=1;else pms_notice=0;
@@ -270,7 +260,7 @@ $("#ajax_download_r").click(function() {
 			{
 				alert(data);
 			}
-				$("#ajax_download_r").val("下载简历");
+				$("#ajax_download_r").val("履歴書ダウンロード");
 				$("#ajax_download_r").attr("disabled","");
 	 	 })
 });
@@ -287,7 +277,7 @@ $("#ajax_download_r").click(function() {
     <tr>
 		<td></td>
 		<td>
-			<input type="button" name="Submit"  id="ajax_download_r" class="but130lan" value="下载简历" />
+			<input type="button" name="Submit"  id="ajax_download_r" class="but130lan" value="履歴書ダウンロード" />
 		</td>
     </tr>
 </table>
@@ -339,15 +329,15 @@ elseif ($act=="download_save")
 					{
 					action_user_setmeal($_SESSION['uid'],"download_resume_senior");
 					$setmeal=get_user_setmeal($_SESSION['uid']);
-					write_memberslog($_SESSION['uid'],1,9002,$_SESSION['username'],"下载了 {$ruser['username']} 发布的高级简历,还可以下载 {$setmeal['download_resume_senior']} 份高级简历",2,1005,"下载高级简历","1","{$setmeal['download_resume_senior']}");
-					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username'],"下载了 {$ruser['username']} 发布的简历");
+					write_memberslog($_SESSION['uid'],1,9002,$_SESSION['username']," {$ruser['username']} 配布の高级履歴書をダウンロードしました,ダウンロード可能 {$setmeal['download_resume_senior']} 件高級履歴書",2,1005,"高级履歴書ダウンロード","1","{$setmeal['download_resume_senior']}");
+					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username']," {$ruser['username']} 配布の履歴書をダウンロードしました");
 					//站内信
 					if($pms_notice=='1'){
 						$company=$db->getone("select id,companyname  from ".table('company_profile')." where uid ={$_SESSION['uid']} limit 1");
 						// $user=$db->getone("select username from ".table('members')." where uid ={$resumeshow['uid']} limit 1");
-						$resume_url=url_rewrite('QS_resumeshow',array('id'=>$id));
-						$company_url=url_rewrite('QS_companyshow',array('id'=>$company['id']));
-						$message=$_SESSION['username']."下载了您发布的简历：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">点击查看公司详情</a>";
+						$resume_url=url_rewrite('HW_resumeshow',array('id'=>$id));
+						$company_url=url_rewrite('HW_companyshow',array('id'=>$company['id']));
+						$message=$_SESSION['username']."貴方配布の履歴書をダウンロードしました：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">会社詳細情報を閲覧</a>";
 						write_pmsnotice($resumeshow['uid'],$ruser['username'],$message);
 					}
 					exit("ok");
@@ -359,15 +349,15 @@ elseif ($act=="download_save")
 					{		
 					action_user_setmeal($_SESSION['uid'],"download_resume_ordinary");
 					$setmeal=get_user_setmeal($_SESSION['uid']);
-					write_memberslog($_SESSION['uid'],1,9002,$_SESSION['username'],"下载了 {$ruser['username']} 发布的普通简历,还可以下载 {$setmeal['download_resume_ordinary']} 份普通简历",2,1004,"下载普通简历","1","{$setmeal['download_resume_ordinary']}");
-					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username'],"下载了 {$ruser['username']} 发布的简历");
+					write_memberslog($_SESSION['uid'],1,9002,$_SESSION['username']," {$ruser['username']} 配布の普通履歴書をダウンロードしました,また {$setmeal['download_resume_ordinary']} 件普通履歴書をダウンロードする可能",2,1004,"ダウンロード普通履歴書","1","{$setmeal['download_resume_ordinary']}");
+					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username']," {$ruser['username']} 配布の履歴書をダウンロードしました");
 					//站内信
 					if($pms_notice=='1'){
 						$company=$db->getone("select id,companyname  from ".table('company_profile')." where uid ={$_SESSION['uid']} limit 1");
 						// $user=$db->getone("select username from ".table('members')." where uid ={$resumeshow['uid']} limit 1");
-						$resume_url=url_rewrite('QS_resumeshow',array('id'=>$id));
-						$company_url=url_rewrite('QS_companyshow',array('id'=>$company['id']));
-						$message=$_SESSION['username']."下载了您发布的简历：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">点击查看公司详情</a>";
+						$resume_url=url_rewrite('HW_resumeshow',array('id'=>$id));
+						$company_url=url_rewrite('HW_companyshow',array('id'=>$company['id']));
+						$message=$_SESSION['username']."貴方配布の履歴書をダウンロードしました：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">会社詳細情報を閲覧</a>";
 						write_pmsnotice($resumeshow['uid'],$ruser['username'],$message);
 					}
 					exit("ok");
@@ -393,18 +383,18 @@ elseif ($act=="download_save")
 					$user_points=get_user_points($_SESSION['uid']);
 					$operator=$ptype=="1"?"+":"-";
 					if($resumeshow['talent']=='2'){
-						write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"下载了 {$ruser['username']} 发布的简历({$operator}{$points}),(剩余:{$user_points})",1,1005,"下载高级简历","{$operator}{$points}","{$user_points}");
+						write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"{$ruser['username']} 配布された履歴書({$operator}{$points})をダウンロードしました,(残るポイント:{$user_points})",1,1005,"高级履歴書ダウンロード","{$operator}{$points}","{$user_points}");
 					}elseif($resumeshow['talent']=='1'){
-						write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"下载了 {$ruser['username']} 发布的简历({$operator}{$points}),(剩余:{$user_points})",1,1004,"下载普通简历","{$operator}{$points}","{$user_points}");
+						write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"{$ruser['username']} 配布された履歴書({$operator}{$points})をダウンロードしました,(残るポイント:{$user_points})",1,1004,"ダウンロード普通履歴書","{$operator}{$points}","{$user_points}");
 					}
-					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username'],"下载了 {$ruser['username']} 发布的简历");
+					write_memberslog($_SESSION['uid'],1,4001,$_SESSION['username']," {$ruser['username']} 配布の履歴書をダウンロードしました");
 					//站内信
 					if($pms_notice=='1'){
 						$company=$db->getone("select id,companyname  from ".table('company_profile')." where uid ={$_SESSION['uid']} limit 1");
 						// $user=$db->getone("select username from ".table('members')." where uid ={$resumeshow['uid']} limit 1");
-						$resume_url=url_rewrite('QS_resumeshow',array('id'=>$id));
-						$company_url=url_rewrite('QS_companyshow',array('id'=>$company['id']));
-						$message=$_SESSION['username']."下载了您发布的简历：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">点击查看公司详情</a>";
+						$resume_url=url_rewrite('HW_resumeshow',array('id'=>$id));
+						$company_url=url_rewrite('HW_companyshow',array('id'=>$company['id']));
+						$message=$_SESSION['username']."貴方配布の履歴書をダウンロードしました：<a href=\"{$resume_url}\" target=\"_blank\">{$resumeshow['resume_name']}</a>，<a href=\"$company_url\" target=\"_blank\">会社詳細情報を閲覧</a>";
 						write_pmsnotice($resumeshow['uid'],$ruser['username'],$message);
 					}
 

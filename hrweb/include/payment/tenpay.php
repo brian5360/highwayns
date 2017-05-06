@@ -3,14 +3,14 @@
  * 74cms 财付通支付插件
  * ============================================================================
  * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
+ * 网站地址: http://www.jp.highwayns.com；
  * ----------------------------------------------------------------------------
  * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
  * 使用；不允许对程序代码以任何形式任何目的的再发布。
  * ============================================================================
 */
 
- if(!defined('IN_QISHI'))
+ if(!defined('IN_HIGHWAY'))
  {
  	die('Access Denied!');
  }
@@ -31,7 +31,7 @@ function get_code($order, $payment)
 	$sp_billno = $order['oid'];//订单号 商家订单号,长度若超过32位，取前32位。财付通只记录商家订单号，不保证唯一。
 	//$total_fee ="1";/* 商品价格（包含运费），以分为单位 */
 	$total_fee =intval($order['v_amount'])*100;/* 商品价格（包含运费），以分为单位 */
-	$desc = "订单号：" . $transaction_id;
+	$desc = "オーダー番号：" . $transaction_id;
 	/* 创建支付请求对象 */
     $reqHandler = new PayRequestHandler();
     $reqHandler->init();
@@ -83,11 +83,11 @@ $resHandler->setKey($key);
 }
 function pay_info()
 {
-$arr['p_introduction']="财付通简短描述：";
-$arr['notes']="财付通详细描述：";
-$arr['partnerid']="财付通商户编号：";
-$arr['ytauthkey']="财付通MD5 密钥：";
-$arr['fee']="财付通交易手续费：";
+$arr['p_introduction']="tenpay説明：";
+$arr['notes']="tenpay详细描述：";
+$arr['partnerid']="tenpayショップ番号：";
+$arr['ytauthkey']="tenpayMD5 キー：";
+$arr['fee']="tenpay手続費：";
 return $arr;
 }
 //----------------------------------------------------

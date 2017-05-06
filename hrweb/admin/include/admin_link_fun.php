@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 管理中心 友情链接 数据调用函数
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
- if(!defined('IN_QISHI'))
+ if(!defined('IN_HIGHWAY'))
  {
  	die('Access Denied!');
  }
@@ -43,7 +33,7 @@ function del_link($id)
 		if (!$db->query("Delete from ".table('link')." WHERE link_id IN (".$sqlin.")")) return false;
 		$return=$return+$db->affected_rows();
 		//填写管理员日志
-		write_log("后台删除id为".$sqlin."的友情链接", $_SESSION['admin_name'],3);
+		write_log("削除idは".$sqlin."の相互リンク", $_SESSION['admin_name'],3);
 	}
 	return $return;
 }
@@ -72,7 +62,7 @@ function del_category($id)
 		if (!$db->query("Delete from ".table('link_category')." WHERE id IN (".$sqlin.")  AND c_sys<>1")) return false;
 		$return=$return+$db->affected_rows();
 		//填写管理员日志
-		write_log("后台删除友情链接分类", $_SESSION['admin_name'],3);
+		write_log("相互リンク分類削除", $_SESSION['admin_name'],3);
 	}
 	return $return;
 }

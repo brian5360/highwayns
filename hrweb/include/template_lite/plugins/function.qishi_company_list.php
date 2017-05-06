@@ -1,5 +1,5 @@
 ﻿<?php
-function tpl_function_qishi_company_list($params, &$smarty)
+function tpl_function_highway_company_list($params, &$smarty)
 {
 global $db,$_CFG;
 $arrset=explode(',',$params['set']);
@@ -8,58 +8,58 @@ foreach($arrset as $str)
 $a=explode(':',$str);
 	switch ($a[0])
 	{
-	case "列表名":
+	case "一覧名":
 		$aset['listname'] = $a[1];
 		break;
-	case "显示数目":
+	case "表示数目":
 		$aset['row'] = $a[1];
 		break;
-	case "开始位置":
+	case "開始位置":
 		$aset['start'] = $a[1];
 		break;
-	case "企业名长度":
+	case "企業名長さ":
 		$aset['companynamelen'] = $a[1];
 		break;
-	case "描述长度":
+	case "説明長さ":
 		$aset['brieflylen'] = $a[1];
 		break;
-	case "填补字符":
+	case "記号を入力してください":
 		$aset['dot'] = $a[1];
 		break;
-	case "行业":
+	case "業界":
 		$aset['trade'] = $a[1];
 		break;
-	case "地区分类":
+	case "地区分類":
 		$aset['citycategory'] = $a[1];
 		break;
-	case "地区大类":
+	case "地区大分類":
 		$aset['district'] = $a[1];
 		break;
-	case "地区小类":
+	case "地区小分類":
 		$aset['sdistrict'] = $a[1];
 		break;
-	case "企业性质":
+	case "企業性质":
 		$aset['nature'] = $a[1];
 		break;
-	case "黄页":
+	case "YellowPage":
 		$aset['yellowpages'] = $a[1];
 		break;
-	case "关键字":
+	case "キーワード":
 		$aset['key'] = $a[1];
 		break;
-	case "排序":
+	case "ソート":
 		$aset['displayorder'] = $a[1];
 		break;
-	case "分页显示":
+	case "ページごと表示":
 		$aset['paged'] = $a[1];
 		break;
-	case "公司页面":
+	case "会社ページ":
 		$aset['companyshow'] = $a[1];
 		break;
-	case "列表页":
+	case "一覧ページ":
 		$aset['listpage'] = $a[1];
 		break;
-	case "规模":
+	case "規模":
 		$aset['scale'] = $a[1];
 		break;
 	}
@@ -70,8 +70,8 @@ $aset['row']=!empty($aset['row'])?intval($aset['row']):10;
 $aset['start']=isset($aset['start'])?intval($aset['start']):0;
 $aset['companynamelen']=isset($aset['companynamelen'])?intval($aset['companynamelen']):16;
 $aset['dot']=isset($aset['dot'])?$aset['dot']:'';
-$aset['companyshow']=isset($aset['companyshow'])?$aset['companyshow']:'QS_companyshow';
-$aset['listpage']=!empty($aset['listpage'])?$aset['listpage']:'QS_companylist';
+$aset['companyshow']=isset($aset['companyshow'])?$aset['companyshow']:'HW_companyshow';
+$aset['listpage']=!empty($aset['listpage'])?$aset['listpage']:'HW_companylist';
 if ($aset['displayorder'])
 {
 	if (strpos($aset['displayorder'],'>'))
@@ -193,7 +193,7 @@ $wheresql=" WHERE ".ltrim(ltrim($wheresql),'AND');
 }
 if (isset($aset['paged']))
 {
-	require_once(QISHI_ROOT_PATH.'include/page.class.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/page.class.php');
 	$total_sql="SELECT COUNT(*) AS num FROM ".table('company_profile').$wheresql;
 	$total_count=$db->get_total($total_sql);
 	$pagelist = new page(array('total'=>$total_count, 'perpage'=>$aset['row'],'alias'=>$aset['listpage'],'getarray'=>$_GET));

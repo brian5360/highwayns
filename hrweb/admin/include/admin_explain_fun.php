@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms 管理中心 说明页 数据调用函数
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
- if(!defined('IN_QISHI'))
+ if(!defined('IN_HIGHWAY'))
  {
  	die('Access Denied!');
  }
@@ -44,7 +34,7 @@ function get_explain($offset, $perpage, $sql= '')
 	}
 	else
 	{
-	$row['url'] = url_rewrite('QS_explainshow',array('id'=>$row['id']));
+	$row['url'] = url_rewrite('HW_explainshow',array('id'=>$row['id']));
 	}
 	$row['url_title'] ="<a href=\"".$row['url']."\" target=\"_blank\" ".$tit_style.">".$row['title']."</a> ";
 	$row_arr[] = $row;
@@ -61,7 +51,7 @@ function del_explain($id)
 	{
 		if (!$db->query("Delete from ".table('explain')." WHERE id IN (".$sqlin.") ")) return false;
 		$return=$return+$db->affected_rows();
-		write_log("删除id为".$sqlin."的说明页,共删除".$return."行", $_SESSION['admin_name'],3);
+		write_log("削除idは".$sqlin."の説明ページ,削除件数".$return."行", $_SESSION['admin_name'],3);
 	}
 	return $return;
 }

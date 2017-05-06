@@ -1,29 +1,13 @@
 ﻿<?php
- /*
- * 74cms 文件上传
-|   @param: $dir      -- 存放目录,最后加"/" [字串] 
-|   @param: $file_var -- 表单变量 [字串] 
-|   @param: $max_size -- 设定最大上传值,以k为单位. [整数/浮点数] 
-|   @param: $type     -- 限定后辍名(小写)，多个用"/"隔开,不限定则留空 [字串] 
-|   @param: $name     -- 上传后命名,留空则为原名,true为系统随机定名 [布林值] 
-|   return: 上传后文件名
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/ 
 function _asUpFiles($dir, $file_var, $max_size='', $type='', $name=false) 
 {
 	if (!file_exists($dir))
 	{
-	showmsg("上传图片失败：上传目录 ".$dir." 不存在!",0);
+	showmsg("画像アップロード失敗：アップロードフォルダー ".$dir." が存在しません!",0);
 	}
 	elseif (!is_writable($dir)) 
 	{
-	showmsg("上传图片失败：上传目录 ".$dir." 无法写入!",0);
+	showmsg("画像アップロード失敗：アップロードフォルダー ".$dir." 書けない!",0);
 	exit(); 
 	}
 	$upfile=& $_FILES["$file_var"]; 
@@ -32,12 +16,12 @@ function _asUpFiles($dir, $file_var, $max_size='', $type='', $name=false)
 	{
 		if (!is_uploaded_file($upfile['tmp_name'])) 
 		{ 
-		showmsg('上传图片失败：你选择的文件无法上传',0);
+		showmsg('画像アップロード失敗：選択されたファイルアップロードができません',0);
 		exit(); 
 		} 
 		elseif ($max_size>0 && $upfile['size']/1024>$max_size) 
 		{ 
-		showmsg("上传图片失败：文件大小不能超过  ".$max_size."KB",0);
+		showmsg("アップロード写真失敗：ファイル最大サイズ  ".$max_size."KB",0);
 		exit(); 
 		}
 		$ext_name = strtolower(str_replace(".","",strrchr($upfilename, ".")));
@@ -47,7 +31,7 @@ function _asUpFiles($dir, $file_var, $max_size='', $type='', $name=false)
 			$arr_type=array_map("strtolower",$arr_type);
 			if (!in_array($ext_name,$arr_type))
 			{
-			showmsg("上传图片失败：只允许上传 ".$type." 的文件！",0);
+			showmsg("画像アップロード失敗：アップロード許可 ".$type." のファイル！",0);
 			exit(); 
 			}
 		/* 	$imgtype=array("jpg","gif","jpeg","bmp","png");		
@@ -56,7 +40,7 @@ function _asUpFiles($dir, $file_var, $max_size='', $type='', $name=false)
 				$imageinfo = getimagesize($upfile['tmp_name']);
 				if (empty($imageinfo[0]) || empty($imageinfo[1]))
 				{
-				showmsg("上传图片失败：只允许上传 ".$type." 的文件！",0);
+				showmsg("画像アップロード失敗：アップロード許可 ".$type." のファイル！",0);
 				exit();
 				}
 			} */
@@ -76,7 +60,7 @@ function _asUpFiles($dir, $file_var, $max_size='', $type='', $name=false)
 			}
 			if (!move_uploaded_file($upfile['tmp_name'], $dir.$uploadname)) 
 			{ 
-				showmsg('上传图片失败：文件上传出错！',0);
+				showmsg('画像アップロード失敗：ファイルアップロードエラー！',0);
 				exit(); 
 			} 
 			return $uploadname; 

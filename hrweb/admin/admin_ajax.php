@@ -1,15 +1,5 @@
 ﻿<?php
- /*
- * 74cms ajax
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../data/config.php');
 require_once(dirname(__FILE__).'/include/admin_common.inc.php');
 $act = !empty($_GET['act']) ? trim($_GET['act']) : 'total';
@@ -82,9 +72,9 @@ elseif($act == 'get_jobs')
 {
 	$type=trim($_GET['type']);
 	$key=trim($_GET['key']);
-	if (strcasecmp(QISHI_DBCHARSET,"utf8")!=0)
+	if (strcasecmp(HIGHWAY_DBCHARSET,"utf8")!=0)
 	{
-	$key=iconv("utf-8",QISHI_DBCHARSET,$key);
+	$key=iconv("utf-8",HIGHWAY_DBCHARSET,$key);
 	}	
 	if ($type=="get_id")
 	{
@@ -114,8 +104,8 @@ elseif($act == 'get_jobs')
 			$row['addtime']=date("Y-m-d",$row['addtime']);
 			$row['deadline']=date("Y-m-d",$row['deadline']);
 			$row['refreshtime']=date("Y-m-d",$row['refreshtime']);
-			$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['company_id']));
-			$row['jobs_url']=url_rewrite('QS_jobsshow',array('id'=>$row['id']));
+			$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['company_id']));
+			$row['jobs_url']=url_rewrite('HW_jobsshow',array('id'=>$row['id']));
 			$info[]=$row['id']."%%%".$row['jobs_name']."%%%".$row['jobs_url']."%%%".$row['companyname']."%%%".$row['company_url']."%%%".$row['addtime']."%%%".$row['deadline']."%%%".$row['refreshtime'];
 		}
 		if (!empty($info))
@@ -131,9 +121,9 @@ elseif($act == 'get_company')
 {
 	$type=trim($_GET['type']);
 	$key=trim($_GET['key']);
-	if (strcasecmp(QISHI_DBCHARSET,"utf8")!=0)
+	if (strcasecmp(HIGHWAY_DBCHARSET,"utf8")!=0)
 	{
-	$key=iconv("utf-8",QISHI_DBCHARSET,$key);
+	$key=iconv("utf-8",HIGHWAY_DBCHARSET,$key);
 	}	
 	if ($type=="getuname")
 	{
@@ -155,7 +145,7 @@ elseif($act == 'get_company')
 			continue;
 			}
 			$row['addtime']=date("Y-m-d",$row['addtime']);
-			$row['company_url']=url_rewrite('QS_companyshow',array('id'=>$row['id']));
+			$row['company_url']=url_rewrite('HW_companyshow',array('id'=>$row['id']));
 			$info[]=$row['id']."%%%".$row['companyname']."%%%".$row['company_url']."%%%".$row['addtime'];
 		}
 		if (!empty($info))
@@ -169,29 +159,29 @@ elseif($act == 'get_user_info')
 	$info=$db->getone("select * from ".table('members')." where uid='{$id}' LIMIT 1");
 	if (empty($info))
 	{
-	exit("会员信息不存在！可能已经被删除！");
+	exit("会員情報が存在しません！すでに削除かもしれません！");
 	}
-	$html="用户名：{$info['username']}&nbsp;&nbsp;<span style=\"color:#0033CC\">(uid:{$info['uid']})</span><br/>";
+	$html="ユーザ名：{$info['username']}&nbsp;&nbsp;<span style=\"color:#0033CC\">(uid:{$info['uid']})</span><br/>";
 	if (!empty($info['mobile']))
 	{
-	$mobile_audit=$info['mobile_audit']=="1"?'<span style="color:#009900">[已验证]</span>':'<span style="color:#FF9900">[未验证]</span>';
+	$mobile_audit=$info['mobile_audit']=="1"?'<span style="color:#009900">[検証済み]</span>':'<span style="color:#FF9900">[未検証]</span>';
 	$info['mobile']=$info['mobile'].$mobile_audit;
 	}
 	else
 	{
 	$info['mobile']='----';
 	}
-	$html.="手机：{$info['mobile']}<br/>";
-	$email_audit=$info['email_audit']=="1"?'<span style="color:#009900">[已验证]</span>':'<span style="color:#FF9900">[未验证]</span>';
-	$html.="邮箱：{$info['email']}{$email_audit}<br/>";
+	$html.="携帯番号：{$info['mobile']}<br/>";
+	$email_audit=$info['email_audit']=="1"?'<span style="color:#009900">[検証済み]</span>':'<span style="color:#FF9900">[未検証]</span>';
+	$html.="メールボックス：{$info['email']}{$email_audit}<br/>";
 	$info['reg_time']=$info['reg_time']?date("Y/m/d H:i",$info['reg_time']):'----';
-	$html.="注册时间：{$info['reg_time']}<br/>";
+	$html.="登録時間：{$info['reg_time']}<br/>";
 	$info['reg_ip']=$info['reg_ip']?$info['reg_ip']:'----';
-	$html.="注册IP：{$info['reg_ip']}<br/>";
+	$html.="登録IP：{$info['reg_ip']}<br/>";
 	$info['last_login_time']=$info['last_login_time']?date("Y/m/d H:i",$info['last_login_time']):'----';
-	$html.="最后登录时间：{$info['last_login_time']}<br/>";
+	$html.="最后登録時間：{$info['last_login_time']}<br/>";
 	$info['last_login_ip']=$info['last_login_ip']?$info['last_login_ip']:'----';
-	$html.="最后登录IP：{$info['last_login_ip']}<br/>";
+	$html.="最后登録IP：{$info['last_login_ip']}<br/>";
 	if ($info['utype']=="1")
 	{
 		$points=$db->getone("select points from ".table('members_points')." where uid = '{$id}'  LIMIT 1 ");
@@ -199,24 +189,24 @@ elseif($act == 'get_user_info')
 		$com=$db->getone("select companyname from ".table('company_profile')." where uid='{$id}' LIMIT 1");
 		if (empty($com['companyname']))
 		{
-		$com['companyname']="未填写";
+		$com['companyname']="未入力";
 		}
-		$html.="公司名称：{$com['companyname']}<br/>";
+		$html.="会社名称：{$com['companyname']}<br/>";
 		$totaljob=$db->get_total("SELECT COUNT(*) AS num FROM ".table('jobs')."  where uid='{$id}'");
-		$html.="发布职位：{$totaljob}条<br/>";
+		$html.="職位配布：{$totaljob}条<br/>";
 		if ($_CFG['operation_mode']>="2")
 		{
 			$setmeal=$db->getone("select * from ".table('members_setmeal')."  WHERE uid='{$id}' AND  effective=1 LIMIT 1");
 			if (!empty($setmeal))
 			{
-				$html.="服务套餐：{$setmeal['setmeal_name']}<br/>";
+				$html.="サービスコース：{$setmeal['setmeal_name']}<br/>";
 				if($setmeal['endtime']=='0')
 				{
-					$html.="服务期限：".date("Y/m/d",$setmeal['starttime'])."-- 至今";
+					$html.="サービス期限：".date("Y/m/d",$setmeal['starttime'])."-- 至今";
 				}
 				else
 				{
-					$html.="服务期限：".date("Y/m/d",$setmeal['starttime'])."--".date("Y/m/d",$setmeal['endtime']);
+					$html.="サービス期限：".date("Y/m/d",$setmeal['starttime'])."--".date("Y/m/d",$setmeal['endtime']);
 				}
 			}
 		}
@@ -224,7 +214,7 @@ elseif($act == 'get_user_info')
 	if ($info['utype']=="2")
 	{
 		$totalresume=$db->get_total("SELECT COUNT(*) AS num FROM ".table('resume')."  where uid='{$id}'");
-		$html.="发布简历：{$totalresume}条<br/>";
+		$html.="履歴書配布：{$totalresume}条<br/>";
 	}
 	exit($html);
 }

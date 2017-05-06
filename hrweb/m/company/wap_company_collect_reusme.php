@@ -1,19 +1,9 @@
 ﻿<?php
- /*
- * 74cms WAP
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../../include/common.inc.php');
-require_once(QISHI_ROOT_PATH.'include/fun_wap.php');
-require_once(QISHI_ROOT_PATH.'include/fun_company.php');
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_wap.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_company.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $smarty->cache = false;
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 $act = !empty($_REQUEST['act']) ? trim($_REQUEST['act']) : 'index';
@@ -45,11 +35,11 @@ elseif ($act == 'index')
 		{
 			if($value['sex']==1)
 			{
-				$value['fullname']=cut_str($value['fullname'],1,0,"先生");
+				$value['fullname']=cut_str($value['fullname'],1,0,"男");
 			}
 			elseif($value['sex']==2)
 			{
-				$value['fullname']=cut_str($value['fullname'],1,0,"女士");
+				$value['fullname']=cut_str($value['fullname'],1,0,"女");
 			}
 		}
 		$row[$key]=$value;
@@ -77,11 +67,11 @@ elseif($act=="ajax_collect_resume")
 			{
 				if($list['sex']==1)
 				{
-					$list['fullname']=cut_str($list['fullname'],1,0,"先生");
+					$list['fullname']=cut_str($list['fullname'],1,0,"男");
 				}
 				elseif($list['sex']==2)
 				{
-					$list['fullname']=cut_str($list['fullname'],1,0,"女士");
+					$list['fullname']=cut_str($list['fullname'],1,0,"女");
 				}
 			}
 			$favoriteshtml.='<div class="get_resume_box" onclick="window.location.href="../wap-resume-show.php?id='.$list["resume_id"].'
@@ -101,11 +91,11 @@ elseif($act=="ajax_collect_resume_add")
 	$sql="select * from ".table("company_favorites")." where resume_id=$resume_id and company_uid=$uid ";
 	$collect_resume=$db->getone($sql);
 	if($_SESSION["utype"]!=1){
-		exit("企业会员登录后收藏简历");
+		exit("企業会員登録後、履歴書をお気に入り");
 	}
 	else if($collect_resume)
 	{
-		exit("您已经收藏过此简历");
+		exit("この履歴書すでにお気に入り");
 	}
 	else
 	{

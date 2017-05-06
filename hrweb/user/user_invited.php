@@ -1,22 +1,12 @@
 ﻿<?php
- /*
- * 74cms 邀请面试
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../include/common.inc.php');
 $act = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'invited';
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['utype'])) &&  $_COOKIE['QS']['username'] && $_COOKIE['QS']['password'] && $_COOKIE['QS']['uid'])
 {
-	require_once(QISHI_ROOT_PATH.'include/fun_user.php');
+	require_once(HIGHWAY_ROOT_PATH.'include/fun_user.php');
 	if(check_cookie($_COOKIE['QS']['uid'],$_COOKIE['QS']['username'],$_COOKIE['QS']['password']))
 	{
 	update_user_info($_COOKIE['QS']['uid'],false,false);
@@ -25,10 +15,10 @@ if((empty($_SESSION['uid']) || empty($_SESSION['username']) || empty($_SESSION['
 	else
 	{
 	unset($_SESSION['uid'],$_SESSION['username'],$_SESSION['utype'],$_SESSION['uqqid'],$_SESSION['activate_username'],$_SESSION['activate_email'],$_SESSION["openid"]);
-	setcookie("QS[uid]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[username]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie('QS[password]',"", time() - 3600,$QS_cookiepath, $QS_cookiedomain);
-	setcookie("QS[utype]","",time() - 3600,$QS_cookiepath, $QS_cookiedomain);
+	setcookie("QS[uid]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[username]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie('QS[password]',"", time() - 3600,$HW_cookiepath, $HW_cookiedomain);
+	setcookie("QS[utype]","",time() - 3600,$HW_cookiepath, $HW_cookiedomain);
 	}
 }
 if ($_SESSION['uid']=='' || $_SESSION['username']=='')
@@ -49,7 +39,7 @@ if ($_SESSION['utype']!='1')
 		    </tr>
 		</table>');
 }
-require_once(QISHI_ROOT_PATH.'include/fun_company.php');
+require_once(HIGHWAY_ROOT_PATH.'include/fun_company.php');
 $user=get_user_info($_SESSION['uid']);
 if ($user['status']=="2") 
 {
@@ -98,7 +88,7 @@ if ($_CFG['operation_mode']=="2")
 {
  			if (empty($setmeal) || ($setmeal['endtime']<time() && $setmeal['endtime']<>"0"))
 			{
-				$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+				$str="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 				exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
 				    <tr>
 						<td width="20" align="right"></td>
@@ -121,8 +111,8 @@ if ($act=="invited")
 				$points=$resume['talent']=='2'?$points_rule['interview_invite_advanced']['value']:$points_rule['interview_invite']['value'];
 				if  ($mypoints<$points)
 				{
-					$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[充值{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-					$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+					$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[振込{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+					$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 					if (!empty($setmeal) && $_CFG['setmeal_to_points']=="1")
 					{
 						exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
@@ -146,7 +136,7 @@ if ($act=="invited")
 						</table>");
 					}
 				}
-				$tip="邀请面试将扣除<span> {$points} </span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，您目前共有<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
+				$tip="面接誘うポイント<span> {$points} </span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，ポイント数<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
 	}
 	/* 检测是否下载过改简历 或者是申请过 职位 */
 	$row = $db->getone("select * from ".table('company_down_resume')." where company_uid={$_SESSION['uid']} and resume_id = ".intval($_GET['id'])." limit 1");
@@ -157,11 +147,11 @@ if ($act=="invited")
 		{
 			if ($resumeshow['talent']=='2')
 			{	
-				$tip="提示：您还可以下载<span> {$setmeal['download_resume_senior']}</span>份高级人才简历";
+				$tip="お知らせ：ダウンロード可能な<span> {$setmeal['download_resume_senior']}</span>件高级人材履歴書";
 			}
 			else
 			{	
-				$tip="提示：您还可以下载<span> {$setmeal['download_resume_ordinary']}</span>份普通人才简历";
+				$tip="お知らせ詳細：ダウンロード可能な普通の履歴書数<span> {$setmeal['download_resume_ordinary']}</span>件";
 			}
 		}	
 		elseif($_CFG['operation_mode']=="1")
@@ -171,8 +161,8 @@ if ($act=="invited")
 			$mypoints=get_user_points($_SESSION['uid']);
 			if  ($mypoints<$points)
 			{
-				$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[充值{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
-				$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[申请服务]</a>";
+				$str="<a href=\"".get_member_url(1,true)."company_service.php?act=order_add\">[振込{$_CFG['points_byname']}]</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+				$str1="<a href=\"".get_member_url(1,true)."company_service.php?act=setmeal_list\">[サービス申し込み]</a>";
 				if (!empty($setmeal) && $_CFG['setmeal_to_points']=="1")
 				{
 					exit('<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall">
@@ -196,7 +186,7 @@ if ($act=="invited")
 					</table>');
 				}			
 			}
-			$tip="下载此份简历将扣除<span> {$points}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，您目前共有<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
+			$tip="この履歴書ダウンロードポイント<span> {$points}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}，総ポイントは<span> {$mypoints}</span>{$_CFG['points_quantifier']}{$_CFG['points_byname']}";
 		}
 ?>
 <script type="text/javascript">
@@ -204,7 +194,7 @@ $(".but100").hover(function(){$(this).addClass("but100_hover")},function(){$(thi
 $("#ajax_download_r").click(function() {
 		var id="<?php echo $id?>";
 		var tsTimeStamp= new Date().getTime();
-			$("#ajax_download_r").val("处理中...");
+			$("#ajax_download_r").val("処理中...");
 			$("#ajax_download_r").attr("disabled","disabled");
  			 var pms_notice=$("#pms_notice").attr("checked");
 			 if(pms_notice) pms_notice=1;else pms_notice=0;
@@ -229,7 +219,7 @@ $("#ajax_download_r").click(function() {
 			{
 				alert(data);
 			}
-			$("#ajax_download_r").val("下载简历");
+			$("#ajax_download_r").val("履歴書ダウンロード");
 			$("#ajax_download_r").attr("disabled","");
 	 	 })
 });
@@ -251,7 +241,7 @@ $("#ajax_download_r").click(function() {
     <tr>
 		<td></td>
 		<td>
-			<input type="button" name="Submit"  id="ajax_download_r" class="but130lan" value="下载简历" />
+			<input type="button" name="Submit"  id="ajax_download_r" class="but130lan" value="履歴書ダウンロード" />
 		</td>
     </tr>
 </table>
@@ -343,7 +333,7 @@ $("#ajax_download_r").click(function() {
 	<div class="dialog-item clearfix">
 		<div class="d-type f-left">&nbsp;</div>
 		<div class="d-content f-left">
-			<input type="button" value="发送" class="btn-65-30blue btn-big-font DialogSubmit"/><input type="button" value="取消" class="btn-65-30grey btn-big-font DialogClose" />
+			<input type="button" value="送信" class="btn-65-30blue btn-big-font DialogSubmit"/><input type="button" value="取消" class="btn-65-30grey btn-big-font DialogClose" />
 		</div>
 	</div>
 </div>
@@ -372,7 +362,7 @@ elseif ($act=="invited_save")
 	$interview_time=trim($_GET['interview_time']);
 	if (check_interview($id,$jobs_id,$_SESSION['uid']))
 	{
-	exit("您已对该简历经行过面试邀请,不能重复邀请！");
+	exit("該当履歴書にすでに面接誘いました,重複できません！");
 	}
 	$jobs=get_jobs_one($jobs_id);
 	$addarr['resume_id']=$resume['id'];
@@ -385,11 +375,11 @@ elseif ($act=="invited_save")
 	{
 		if($resume['sex']==1)
 		{
-			$addarr['resume_name']=cut_str($resume['fullname'],1,0,"先生");	
+			$addarr['resume_name']=cut_str($resume['fullname'],1,0,"男");	
 		}
 		elseif($resume['sex']==2)
 		{
-			$addarr['resume_name']=cut_str($resume['fullname'],1,0,"女士");
+			$addarr['resume_name']=cut_str($resume['fullname'],1,0,"女");
 		}
 	}
 	else
@@ -407,7 +397,7 @@ elseif ($act=="invited_save")
 	$addarr['notes']= $notes;
 	$addarr['interview_addtime']= time();
 	$addarr['interview_time']= $interview_time;
-	if (strcasecmp(QISHI_DBCHARSET,"utf8")!=0)
+	if (strcasecmp(HIGHWAY_DBCHARSET,"utf8")!=0)
 	{
 		$addarr['notes']=iconv("utf-8", "gbk",$addarr['notes']);
 	}
@@ -417,7 +407,7 @@ elseif ($act=="invited_save")
 	{
 		$db->inserttable(table('company_interview'),$addarr);
 		// 邀请面试 不做 套餐限制
-		write_memberslog($_SESSION['uid'],1,6001,$_SESSION['username'],"邀请了 {$resume_user['username']} 面试");
+		write_memberslog($_SESSION['uid'],1,6001,$_SESSION['username']," {$resume_user['username']} 面接を誘う");
 	}		 
 	elseif($_CFG['operation_mode']=="1")
 	{
@@ -427,7 +417,7 @@ elseif ($act=="invited_save")
 		$ptype=$resumeshow['talent']=='2'?$points_rule['interview_invite_advanced']['type']:$points_rule['interview_invite']['type'];
 		if  ($mypoints<$points)
 		{
-			exit("您的积分不足,不能经行邀请面试！");
+			exit("ポイント足りない,面接誘いが不可！");
 		}
 		$db->inserttable(table('company_interview'),$addarr);
 		if ($points>0)
@@ -436,16 +426,13 @@ elseif ($act=="invited_save")
 			$user_points=get_user_points($_SESSION['uid']);
 			$operator=$ptype=="1"?"+":"-";
 			if($resume['talent']=='2'){
-				write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"邀请 {$resume_user['username']} 面试({$operator}{$points}),(剩余:{$user_points})",1,1007,"邀请高级人才面试","{$operator}{$points}","{$user_points}");
+				write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username']," {$resume_user['username']} 面接を誘う({$operator}{$points}),(残る:{$user_points})",1,1007,"高级人材面接誘い","{$operator}{$points}","{$user_points}");
 			}else{
-				write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username'],"邀请 {$resume_user['username']} 面试({$operator}{$points}),(剩余:{$user_points})",1,1006,"邀请普通人才面试","{$operator}{$points}","{$user_points}");
+				write_memberslog($_SESSION['uid'],1,9001,$_SESSION['username']," {$resume_user['username']} 面接を誘う({$operator}{$points}),(残る:{$user_points})",1,1006,"普通人材面接誘い","{$operator}{$points}","{$user_points}");
 			}
-			write_memberslog($_SESSION['uid'],1,6001,$_SESSION['username'],"邀请 {$resume_user['username']} 面试");
+			write_memberslog($_SESSION['uid'],1,6001,$_SESSION['username']," {$resume_user['username']} を面接誘う");
 		}		
 	}
-	/*
-		发送短信提示 操作 
-	*/
 	$sms=get_cache('sms_config');
 	if($sms['open']=="1" && $sms['set_invite']=="1" && $sms_notice=="1")
 	{
@@ -454,9 +441,9 @@ elseif ($act=="invited_save")
 	}
 	//站内信
 	if($pms_notice=='1'){
-		$jobs_url=url_rewrite('QS_jobsshow',array('id'=>$jobs['id']));
-		$company_url=url_rewrite('QS_companyshow',array('id'=>$jobs['company_id']),false);
-		$message=$jobs['companyname']."邀请您参加公司面试，面试职位：<a href=\"{$jobs_url}\" target=\"_blank\"> {$jobs['jobs_name']} </a>，<a href=\"{$company_url}\" target=\"_blank\">点击查看公司详情</a>";
+		$jobs_url=url_rewrite('HW_jobsshow',array('id'=>$jobs['id']));
+		$company_url=url_rewrite('HW_companyshow',array('id'=>$jobs['company_id']),false);
+		$message=$jobs['companyname']."会社面接誘いがあります，面接職位：<a href=\"{$jobs_url}\" target=\"_blank\"> {$jobs['jobs_name']} </a>，<a href=\"{$company_url}\" target=\"_blank\">会社詳細情報を閲覧</a>";
 		write_pmsnotice($resume['uid'],$resume_user['username'],$message);
 	}
 	$html='<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tableall" id="invited_ok">

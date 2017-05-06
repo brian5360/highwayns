@@ -1,18 +1,8 @@
 ﻿<?php
- /*
- * 74cms 生成word
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/company_common.php');
 $smarty->assign('leftmenu',"recruitment");
-$id =!empty($_REQUEST['y_id'])?$_REQUEST['y_id']:showmsg("你没有选择简历！",1);
+$id =!empty($_REQUEST['y_id'])?$_REQUEST['y_id']:showmsg("履歴書を選択してください！",1);
 if (is_array($id))
 {
 	// 已下载的简历 批量导出为word  先查询简历id  
@@ -34,7 +24,7 @@ $result=$db->getall($rsume_sql);
 $htm='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv=Content-Type  content="text/html; charset=gb2312" >
+	<meta http-equiv=Content-Type  content="text/html; charset=utf-8" >
 	<title></title>
 	<style>
 
@@ -63,11 +53,11 @@ foreach ($result as $val)
 	{
 		if($val['sex']==1)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"先生");
+			$val['fullname']=cut_str($val['fullname'],1,0,"男");
 		}
 		elseif($val['sex']==2)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"女士");
+			$val['fullname']=cut_str($val['fullname'],1,0,"女");
 		}
 		$val['fullname_']=$val['fullname'];	
 	}
@@ -126,8 +116,8 @@ $htm.='
 			else
 			{
 				$val['fullname']=$val['fullname'];
-				$val['telephone']="下载后可见";
-				$val['email']="下载后可见";
+				$val['telephone']="ダウンロード後ご覧ください";
+				$val['email']="ダウンロード後ご覧ください";
 			}
 		}elseif($_SESSION['utype']=='2' && $_SESSION['uid']==$val['uid'])
 		{
@@ -136,8 +126,8 @@ $htm.='
 			$val['email']=$val['email'];
 		}else{
 				$val['fullname']=$val['fullname'];
-				$val['telephone']="下载后可见";
-				$val['email']="下载后可见";
+				$val['telephone']="ダウンロード後ご覧ください";
+				$val['email']="ダウンロード後ご覧ください";
 		}
 	}
 	if ($val['photo']=="1")
@@ -249,7 +239,7 @@ $htm.='
 	}
 	else
 	{
-	 $htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0" style="font-size: 12px;padding-top: 20px;"><tr>没有填写工作经历</tr></table>';
+	 $htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0" style="font-size: 12px;padding-top: 20px;"><tr>仕事履歴を入力してください</tr></table>';
 	}
 	// 培训经历
 	$htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0">
@@ -335,7 +325,7 @@ $htm.="<div align=\"center\"><br />
 header("Cache-Control: no-cache, must-revalidate"); 
 header("Pragma: no-cache");   
 header("Content-Type: application/doc"); 
-header("Content-Disposition:attachment; filename=导出个人简历.doc"); 
+header("Content-Disposition:attachment; filename=導出個人履歴書.doc"); 
 echo $htm;
 function get_this_education($uid,$pid)
 {

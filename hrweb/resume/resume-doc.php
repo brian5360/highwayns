@@ -1,25 +1,15 @@
 ﻿<?php
- /*
- * 74cms 生成word
- * ============================================================================
- * 版权所有: 骑士网络，并保留所有权利。
- * 网站地址: http://www.74cms.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
-*/
-define('IN_QISHI', true);
+define('IN_HIGHWAY', true);
 require_once(dirname(__FILE__).'/../include/common.inc.php');
-require_once(QISHI_ROOT_PATH.'include/mysql.class.php');
+require_once(HIGHWAY_ROOT_PATH.'include/mysql.class.php');
 $db = new mysql($dbhost,$dbuser,$dbpass,$dbname);
 unset($dbhost,$dbuser,$dbpass,$dbname);
 $uid=intval($_GET['uid']);//简历所属会员的uid
 $id=intval($_GET['resume_id']);
 if ($_SESSION['uid']=='' || $_SESSION['username']=='')
 {
-	$resume_url=url_rewrite('QS_resumeshow',array('id'=>$id));
-    header("Location:".url_rewrite('QS_login')."?url={$resume_url}");
+	$resume_url=url_rewrite('HW_resumeshow',array('id'=>$id));
+    header("Location:".url_rewrite('HW_login')."?url={$resume_url}");
 	exit();
 }
 if(($_SESSION['utype']=='2' && $_SESSION['uid']==$uid) || $_SESSION['utype']=='1'){
@@ -27,7 +17,7 @@ if(($_SESSION['utype']=='2' && $_SESSION['uid']==$uid) || $_SESSION['utype']=='1
 }else{
 	$flag=false;
 }
-if(!$flag) {showmsg('您没有权限！只有个人用户和企业用户可以转换简历',1);exit();}
+if(!$flag) {showmsg('権限がない！個人ユーザと企業ユーザだけ履歴書変換が使える',1);exit();}
 $wheresql=" WHERE  id='{$id}'  AND uid='{$uid}' ";
 $sql = "select * from ".table('resume').$wheresql." LIMIT  1";
 $val=$db->getone($sql);
@@ -49,11 +39,11 @@ if ($val)
 	{
 		if($val['sex']==1)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"先生");
+			$val['fullname']=cut_str($val['fullname'],1,0,"男");
 		}
 		elseif($val['sex']==2)
 		{
-			$val['fullname']=cut_str($val['fullname'],1,0,"女士");
+			$val['fullname']=cut_str($val['fullname'],1,0,"女");
 		}
 		$val['fullname_']=$val['fullname'];	
 	}
@@ -75,7 +65,7 @@ if ($val)
 	$htm='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv=Content-Type  content="text/html; charset=gb2312" >
+	<meta http-equiv=Content-Type  content="text/html; charset=utf-8" >
 	<title></title>
 	<style>
 
@@ -91,7 +81,7 @@ if ($val)
 			<td align="center">'.$val['title'].'</td>
 			<td align="center">最近登录</td>
 			<td align="center">'.$last_login_time.'</td>
-			<td align="center"><img width="130" height="40" src="'.$_CFG["upfiles_dir"].$_CFG["web_logo"].'" alt="{#$QISHI.site_name#}" border="0" align="absmiddle"></td>
+			<td align="center"><img width="130" height="40" src="'.$_CFG["upfiles_dir"].$_CFG["web_logo"].'" alt="{#$HIGHWAY.site_name#}" border="0" align="absmiddle"></td>
 		</tr>
 	</table>';
 // if($set_apply==1){
@@ -124,8 +114,8 @@ elseif($_CFG['showresumecontact']=='2')//联系方式：会员下载后可见
 		else
 		{
 			$val['fullname']=$val['fullname'];
-			$val['telephone']="下载后可见";
-			$val['email']="下载后可见";
+			$val['telephone']="ダウンロード後ご覧ください";
+			$val['email']="ダウンロード後ご覧ください";
 		}
 	}elseif($_SESSION['utype']=='2' && $_SESSION['uid']==$uid){
 		$val['fullname']=$val['fullname'];
@@ -133,8 +123,8 @@ elseif($_CFG['showresumecontact']=='2')//联系方式：会员下载后可见
 		$val['email']=$val['email'];
 	}else{
 			$val['fullname']=$val['fullname'];
-			$val['telephone']="下载后可见";
-			$val['email']="下载后可见";
+			$val['telephone']="ダウンロード後ご覧ください";
+			$val['email']="ダウンロード後ご覧ください";
 	}
 }
 if ($val['photo']=="1")
@@ -246,7 +236,7 @@ if($val['work_list'])
 }
 else
 {
- $htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0" style="font-size: 12px;padding-top: 20px;"><tr>没有填写工作经历</tr></table>';
+ $htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0" style="font-size: 12px;padding-top: 20px;"><tr>仕事履歴を入力してください</tr></table>';
 }
 // 培训经历
 $htm.='<table width="700" border="0" align="center" cellpadding="10" cellspacing="0">
@@ -330,12 +320,12 @@ $htm.="<div align=\"center\"><br />
 header("Cache-Control: no-cache, must-revalidate"); 
 header("Pragma: no-cache");   
 header("Content-Type: application/doc"); 
-header("Content-Disposition:attachment; filename={$val['fullname']}的个人简历.doc"); 
+header("Content-Disposition:attachment; filename={$val['fullname']}の個人履歴書.doc"); 
 echo $htm;
 }
 else
 {
- showmsg('简历不存在！',1);
+ showmsg('履歴書存在しません！',1);
  exit();
 }
 function get_this_education($uid,$pid)
